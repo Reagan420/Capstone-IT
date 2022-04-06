@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>63718917136-scmunp6k841oem9m692ddjta4kn4d34u.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.63718917136-scmunp6k841oem9m692ddjta4kn4d34u</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDLat911POIvWHzNQx8eD-vVEQL7VDdVzo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>63718917136</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.Elements4Success.Skills4lifeapp</string>
+	<key>PROJECT_ID</key>
+	<string>capstone-test-a98ed</string>
+	<key>STORAGE_BUCKET</key>
+	<string>capstone-test-a98ed.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:63718917136:ios:c0b78bf2ab61644f82b695</string>
+</dict>
+</plist>
