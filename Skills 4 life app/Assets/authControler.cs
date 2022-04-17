@@ -7,6 +7,8 @@ public class authControler : MonoBehaviour
 {
 
     public Text emailInput, passInput;
+    public GameObject UserComunication;
+    private string message = "";
 
     public void Login()
     {
@@ -29,10 +31,13 @@ public class authControler : MonoBehaviour
 
                     return;
                 }
-
-                Firebase.Auth.FirebaseUser newUser = task.Result;
-                Debug.LogFormat("User signed in successfully: {0} ({1})",
-                    newUser.DisplayName, newUser.UserId);
+                if (task.IsCompleted)
+                {
+                    Firebase.Auth.FirebaseUser newUser = task.Result;
+                    Debug.LogFormat("User signed in successfully: {0} ({1})",
+                        newUser.DisplayName, newUser.UserId);
+                    message = "You succesfully logged in!";
+                }
             });
 
     }
@@ -73,6 +78,7 @@ public class authControler : MonoBehaviour
                 // Firebase user has been created.
                 Firebase.Auth.FirebaseUser newUser = task.Result;
                 Debug.Log("Success");
+                message = "You succesfully registered!";
             }
 
 
@@ -86,7 +92,14 @@ public class authControler : MonoBehaviour
         msg = errorCode.ToString();
         Debug.Log(msg);
 
+        message = msg;
+
     }
 
+    private void Update()
+    {
+        UserComunication.GetComponent<Text>().text = message;
+
+    }
 
 }
