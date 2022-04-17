@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: c53fdaca657ffe94c8da88be16e28714
+labels:
+- gvh
+- gvh_version-8.9.0
+- gvhp_exportpath-Firebase/Editor/generate_xml_from_google_services_json.exe
+timeCreated: 1480838400
+DefaultImporter:
+  userData:
+  assetBundleName:
+  assetBundleVariant:
