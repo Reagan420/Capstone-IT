@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "218014245243",
+    "project_id": "skills4lifeapp",
+    "storage_bucket": "skills4lifeapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218014245243:android:8513cfc9fc36019acbddde",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.Skills4lifeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218014245243-6fkpmnfm93d66r3k1svv0mv39369vd8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbclI95zmpykL_mszYwi-xzgmiuHxSuO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218014245243-6fkpmnfm93d66r3k1svv0mv39369vd8j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "218014245243-l0lai3jl0ko8qodjckk1arafitded526.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.DefaultCompany.Skills4lifeapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
