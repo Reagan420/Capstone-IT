@@ -13,12 +13,15 @@ public class VideoLoader : MonoBehaviour
 
     FirebaseStorage FBstorage;
 
-    FirebaseRefrence storageRef;
+    StorageReference storageRef;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
+        storageRef = FirebaseStorage.DefaultInstance.RootReference;
+
+
     }
 
     // Update is called once per frame
@@ -26,4 +29,36 @@ public class VideoLoader : MonoBehaviour
     {
         
     }
+
+    public void testvideoDownload() 
+    {
+        var temp = storageRef.GetFileAsync("videoplayback.mp4").ContinueWith(task =>
+        {
+            if(task.IsCanceled || task.IsFaulted)
+            {
+                Debug.Log("Something broke");
+            }
+            else
+            {
+                Debug.Log("Its alive?");
+            }
+        });
+
+        //currentVideo = temp;
+        //storageRef.Child("videoplayback.mp4");
+        Debug.Log(temp);
+
+        
+    }
+
+
+    /*
+     * storageRef.Child("videoplayback.mp4").GetDownloadUrlAsync().
+            ContinueWithOnMainThread(task =>
+            {
+                if(!task.IsFaulted && !task.IsCanceled)
+                {
+                    StartCoroutine(download)
+                }
+            });*/
 }
