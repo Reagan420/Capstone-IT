@@ -10,6 +10,23 @@ public class authControler : MonoBehaviour
     public GameObject UserComunication;
     private string message = "";
 
+    private GameObject currentScreen;
+
+    public GameObject WelcomeScreen;
+    public GameObject LoginScreen;
+    public GameObject firstUserScreen;
+
+    private void Start()
+    {
+        currentScreen = WelcomeScreen;
+        WelcomeScreen.SetActive(true);
+
+        LoginScreen.SetActive(false);
+        firstUserScreen.SetActive(false);
+        //WelcomeScreen.SetActive(true);
+    }
+
+
     public void Login()
     {
         FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(emailInput.text, passInput.text)
@@ -43,7 +60,16 @@ public class authControler : MonoBehaviour
     }
     public void logout()
     {
-
+        if(FirebaseAuth.DefaultInstance.CurrentUser != null)
+        {
+            FirebaseAuth.DefaultInstance.SignOut();
+            message = "You have successfully logged out!";
+        }
+        else
+        {
+            message = "Nobody has logged in";
+        }
+        
     }
 
     public void registerUser()
@@ -102,4 +128,29 @@ public class authControler : MonoBehaviour
 
     }
 
+    public void QuitButton()
+    {
+        Application.Quit();
+
+    }
+
+    public void goToLogin()
+    {
+        currentScreen.SetActive(false);
+        currentScreen = LoginScreen;
+        currentScreen.SetActive(true);
+
+    }
+
+    public void nextPageFromLogin()
+    {
+        currentScreen.SetActive(false);
+        currentScreen = firstUserScreen;
+        firstUserScreen.SetActive(true);
+    }
+
+    public void throwError()
+    {
+        Debug.LogError("A error has been encountered, please throw something at Reagan (i know this is going to come back to bite me)");
+    }
 }
