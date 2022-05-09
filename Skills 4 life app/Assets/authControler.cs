@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Firebase.Auth;
+using Firebase.Database;
+using Firebase.Storage;
+using System.IO;
 public class authControler : MonoBehaviour
 {
 
-    public Text emailInput, passInput;
+    public Text emailInput, passInput, userName;
     public GameObject UserComunication;
     private string message = "";
 
@@ -16,8 +19,18 @@ public class authControler : MonoBehaviour
     public GameObject LoginScreen;
     public GameObject firstUserScreen;
 
+
+    private string currUserID;
+    private string UserName;
+
+    //Firebase.Auth.FirebaseAuth auth;
+    
+    Firebase.Auth.FirebaseUser user;
+
     private void Start()
     {
+        DatabaseReference refrence = FirebaseDatabase.DefaultInstance.RootReference;
+
         currentScreen = WelcomeScreen;
         WelcomeScreen.SetActive(true);
 
@@ -54,9 +67,24 @@ public class authControler : MonoBehaviour
                     Debug.LogFormat("User signed in successfully: {0} ({1})",
                         newUser.DisplayName, newUser.UserId);
                     message = "You succesfully logged in!";
+                    currUserID = newUser.UserId;
+                    UserName = newUser.DisplayName;
                 }
             });
-
+        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
+        FirebaseUser user = auth.CurrentUser;
+        if (user != null)
+        {
+            string name = user.DisplayName;
+            string email = user.Email;
+            System.Uri photo_url = user.PhotoUrl;
+            // The user's Id, unique to the Firebase project.
+            // Do NOT use this value to authenticate with your backend server, if you
+            // have one; use User.TokenAsync() instead.
+            string uid = user.UserId;
+            Debug.Log("name: " + name + " email: " + email + " UserID: " + uid + " unique to firebase project");
+        }
+        
     }
     public void logout()
     {
@@ -78,10 +106,11 @@ public class authControler : MonoBehaviour
         if (emailInput.text.Equals("") && passInput.text.Equals(""))
         {
             Debug.Log("Error: No text in password or Email");
-            return;
+            //return;
         }
-
-        FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(emailInput.text, passInput.text).ContinueWith(task => {
+        FirebaseUser newUser = null;
+        var RegisterTask = FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(emailInput.text, passInput.text).ContinueWith(task =>
+        {
             if (task.IsCanceled)
             {
                 Firebase.FirebaseException e = task.Exception.Flatten().InnerExceptions[0] as Firebase.FirebaseException;
@@ -102,13 +131,80 @@ public class authControler : MonoBehaviour
             if (task.IsCompleted)
             {
                 // Firebase user has been created.
-                Firebase.Auth.FirebaseUser newUser = task.Result;
-                Debug.Log("Success");
+                newUser = task.Result;
+                Debug.Log("Success" + newUser.Email + " " + newUser.DisplayName);
                 message = "You succesfully registered!";
+
+                UserProfile profile = new UserProfile { DisplayName = userName.text };
+
+                var profileTask = newUser.UpdateUserProfileAsync(profile).ContinueWith(task =>
+                {
+                    if (task.IsCanceled)
+                    {
+                        Firebase.FirebaseException e = task.Exception.Flatten().InnerExceptions[0] as Firebase.FirebaseException;
+
+                        getErrorMessage((AuthError)e.ErrorCode);
+                        Debug.Log("Canceled username generation");
+
+                        return;
+                    }
+                    if (task.IsFaulted)
+                    {
+                        Firebase.FirebaseException e = task.Exception.Flatten().InnerExceptions[0] as Firebase.FirebaseException;
+
+                        getErrorMessage((AuthError)e.ErrorCode);
+                        Debug.Log("faulted username generation");
+                        return;
+                    }
+                    if (task.IsCompleted)
+                    {
+                        Debug.Log("updated username: " + profile.DisplayName);
+
+                        makeUserStorageDirectory(newUser.UserId + "/notImportant.txt");
+                        message = "You succesfully registered!";
+                    }
+                });
             }
 
-
         });
+
+
+        // Create a root reference
+        
+
+    }
+
+    private void makeUserStorageDirectory(string directory)
+    {
+        StorageReference storageRef = FirebaseStorage.DefaultInstance.RootReference;
+
+        StorageReference readmeRef = storageRef.Child(directory);
+
+        string path = "notImportant.txt";
+
+        File.WriteAllText(path, "This is a test file designed to make a directory in firebase using the Userid of the person.");
+
+
+        // Upload the file to the path "images/rivers.jpg"
+        readmeRef.PutFileAsync(path)
+            .ContinueWith((task) => {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.Log(task.Exception.ToString());
+            // Uh-oh, an error occurred!
+        }
+                else
+                {
+            // Metadata contains file metadata such as size, content-type, and download URL.
+                    StorageMetadata metadata = task.Result;
+                    string md5Hash = metadata.Md5Hash;
+                    Debug.Log("Finished uploading...");
+                    Debug.Log("md5 hash = " + md5Hash);
+                    Debug.Log("File made in cloud?");
+                }
+            });
+
+
     }
 
     void getErrorMessage(AuthError errorCode)

@@ -15,9 +15,17 @@ public class VideoLoader : MonoBehaviour
 
     StorageReference storageRef;
 
+    FirebaseFirestore db;
+    Dictionary<string, object> user;
+    [SerializeField]InputField username;
+    [SerializeField] InputField email;
+    [SerializeField] InputField nameToken;
+
     // Start is called before the first frame update
     void Start()
     {
+
+        db = FirebaseFirestore.DefaultInstance;
 
         storageRef = FirebaseStorage.DefaultInstance.RootReference;
 
@@ -32,6 +40,10 @@ public class VideoLoader : MonoBehaviour
 
     public void testvideoDownload() 
     {
+
+        //db.Collection("Users").Document(nameToken.text).GetSnapshotAsync().ContinueWith
+
+
         /*
         var temp = storageRef.GetFileAsync("videoplayback.mp4").ContinueWith(task =>
         {
@@ -46,7 +58,7 @@ public class VideoLoader : MonoBehaviour
         });
 
         */
-
+        /*
         // Fetch the download URL
         storageRef.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
             if (task.IsCompleted)
@@ -63,7 +75,7 @@ public class VideoLoader : MonoBehaviour
                 Debug.Log("cancel culture");
             }
         });
-
+        */
 
         //currentVideo = temp;
         //storageRef.Child("videoplayback.mp4");
