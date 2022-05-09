@@ -199,10 +199,10 @@ public class authControler : MonoBehaviour
                     StorageMetadata metadata = task.Result;
                     string md5Hash = metadata.Md5Hash;
                     Debug.Log("Finished uploading...");
-                    Debug.Log("md5 hash = " + md5Hash);
-                    Debug.Log("File made in cloud?");
+                    Debug.Log("File made in cloud!");
                 }
             });
+        File.Delete(path);
 
 
     }
