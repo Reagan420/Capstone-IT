@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id">
+  <string name="firebase_database_url" translatable="false">https://skills4life-a8de1-default-rtdb.firebaseio.com</string>
+  <string name="gcm_defaultSenderId" translatable="false">732298102635</string>
+  <string name="google_storage_bucket" translatable="false">skills4life-a8de1.appspot.com</string>
+  <string name="project_id" translatable="false">skills4life-a8de1</string>
+  <string name="google_api_key" translatable="false">AIzaSyBWWezxZ8A5lFlLyu58VCo6XIqZbtuMFcE</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBWWezxZ8A5lFlLyu58VCo6XIqZbtuMFcE</string>
+  <string name="google_app_id" translatable="false">1:732298102635:android:16c2b09044ca0caa9fae2e</string>
+  <string name="default_web_client_id" translatable="false">732298102635-5822al009cosnt83mfmkbj04mh4cfbug.apps.googleusercontent.com</string>
+</resources>
