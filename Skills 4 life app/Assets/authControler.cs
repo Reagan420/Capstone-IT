@@ -19,6 +19,8 @@ public class authControler : MonoBehaviour
     public GameObject LoginScreen;
     public GameObject firstUserScreen;
 
+    StorageReference storageRef;
+
 
     private string currUserID;
     private string UserName;
@@ -29,13 +31,21 @@ public class authControler : MonoBehaviour
 
     private void Start()
     {
+        
         DatabaseReference refrence = FirebaseDatabase.DefaultInstance.RootReference;
-
+        storageRef = FirebaseStorage.DefaultInstance.RootReference;
         currentScreen = WelcomeScreen;
-        WelcomeScreen.SetActive(true);
+        try
+        {
+            WelcomeScreen.SetActive(true);
 
-        LoginScreen.SetActive(false);
-        firstUserScreen.SetActive(false);
+            LoginScreen.SetActive(false);
+            firstUserScreen.SetActive(false);
+        }
+        catch
+        {
+        }
+
         //WelcomeScreen.SetActive(true);
     }
 
@@ -220,7 +230,12 @@ public class authControler : MonoBehaviour
 
     private void Update()
     {
-        UserComunication.GetComponent<Text>().text = message;
+            if (UserComunication == null || UserComunication.active == false)
+            {
+                UserComunication = GameObject.FindWithTag("feedback");
+                UserComunication.GetComponent<Text>().text = message;
+            }
+
 
     }
 
@@ -248,5 +263,28 @@ public class authControler : MonoBehaviour
     public void throwError()
     {
         Debug.LogError("A error has been encountered, please throw something at Reagan (i know this is going to come back to bite me)");
+    }
+
+
+
+    public void testvideoDownload()
+    {
+
+        var temp = storageRef.GetFileAsync("videoplayback.mp4").ContinueWith(task =>
+        {
+            if (task.IsCanceled || task.IsFaulted)
+            {
+                Debug.Log("Error video not recieved");
+            }
+            else if(task.IsCompleted)
+            {
+                Debug.Log("Video recieved and able to be used");
+            }
+            else
+            {
+                throwError();
+            }
+        });
+
     }
 }

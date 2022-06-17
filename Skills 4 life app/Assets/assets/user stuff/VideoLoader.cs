@@ -44,7 +44,7 @@ public class VideoLoader : MonoBehaviour
         //db.Collection("Users").Document(nameToken.text).GetSnapshotAsync().ContinueWith
 
 
-        /*
+        
         var temp = storageRef.GetFileAsync("videoplayback.mp4").ContinueWith(task =>
         {
             if(task.IsCanceled || task.IsFaulted)
@@ -57,7 +57,7 @@ public class VideoLoader : MonoBehaviour
             }
         });
 
-        */
+        
         /*
         // Fetch the download URL
         storageRef.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
