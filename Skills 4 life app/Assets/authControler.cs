@@ -18,6 +18,8 @@ public class authControler : MonoBehaviour
     public GameObject WelcomeScreen;
     public GameObject LoginScreen;
     public GameObject firstUserScreen;
+    public GameObject signUpScreen;
+    public GameObject profileScreen;
 
     StorageReference storageRef;
 
@@ -41,6 +43,8 @@ public class authControler : MonoBehaviour
 
             LoginScreen.SetActive(false);
             firstUserScreen.SetActive(false);
+            signUpScreen.SetActive(false);
+            profileScreen.SetActive(false);
         }
         catch
         {
@@ -230,11 +234,11 @@ public class authControler : MonoBehaviour
 
     private void Update()
     {
-            if (UserComunication == null || UserComunication.active == false)
-            {
-                UserComunication = GameObject.FindWithTag("feedback");
-                UserComunication.GetComponent<Text>().text = message;
-            }
+        if (UserComunication == null || UserComunication.active == false)
+        {
+            UserComunication = GameObject.FindWithTag("feedback");
+            UserComunication.GetComponent<Text>().text = message;
+        }
 
 
     }
@@ -257,7 +261,21 @@ public class authControler : MonoBehaviour
     {
         currentScreen.SetActive(false);
         currentScreen = firstUserScreen;
-        firstUserScreen.SetActive(true);
+        currentScreen.SetActive(true);
+    }
+
+    public void gotToSignUp()
+    {
+        currentScreen.SetActive(false);
+        currentScreen = signUpScreen;
+        currentScreen.SetActive(true);
+    }
+
+    public void gotToProfile()
+    {
+        currentScreen.SetActive(false);
+        currentScreen = profileScreen;
+        currentScreen.SetActive(true);
     }
 
     public void throwError()
