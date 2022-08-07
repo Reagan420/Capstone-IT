@@ -17,7 +17,7 @@ public class authControler : MonoBehaviour
 
     public GameObject WelcomeScreen;
     public GameObject LoginScreen;
-    public GameObject firstUserScreen;
+    public GameObject homeScreen;
     public GameObject signUpScreen;
     public GameObject profileScreen;
 
@@ -42,7 +42,7 @@ public class authControler : MonoBehaviour
             WelcomeScreen.SetActive(true);
 
             LoginScreen.SetActive(false);
-            firstUserScreen.SetActive(false);
+            homeScreen.SetActive(false);
             signUpScreen.SetActive(false);
             profileScreen.SetActive(false);
         }
@@ -257,10 +257,10 @@ public class authControler : MonoBehaviour
 
     }
 
-    public void nextPageFromLogin()
+    public void gotToHome()
     {
         currentScreen.SetActive(false);
-        currentScreen = firstUserScreen;
+        currentScreen = homeScreen;
         currentScreen.SetActive(true);
     }
 
