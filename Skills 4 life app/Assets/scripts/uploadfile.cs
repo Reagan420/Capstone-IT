@@ -23,9 +23,6 @@ public class uploadfile : MonoBehaviour
 
 	void Start()
 	{
-		
-		
-
 
 		storage = FirebaseStorage.DefaultInstance;
 		storageReference = FirebaseStorage.DefaultInstance.RootReference;
@@ -121,7 +118,6 @@ public class uploadfile : MonoBehaviour
                 }
 			});
 			StreamWriter writer;
-			string thePath = "UserVideos.txt";
 			//bool txtfileRecieved = false;
 			storageReference.GetFileAsync("UserVideos.txt").ContinueWith(task =>
 			{
@@ -138,7 +134,7 @@ public class uploadfile : MonoBehaviour
 					writer.WriteLine("Test");
 					writer.Close();
 
-					StorageReference uploadrefTXT = storageReference.Child(userID + "/" + thePath);
+					StorageReference uploadrefTXT = storageReference.Child(userID + "/" + path);
 					metadata.ContentType = "text/txt";
 					// Delete the file
 					uploadrefTXT.DeleteAsync().ContinueWithOnMainThread(task => {
@@ -154,7 +150,7 @@ public class uploadfile : MonoBehaviour
 					});
 					Debug.Log("deleted now uploading new");
 
-					uploadrefTXT.PutFileAsync(thePath, metadata).ContinueWithOnMainThread((task) =>
+					uploadrefTXT.PutFileAsync(path, metadata).ContinueWithOnMainThread((task) =>
 					{
 						if (task.IsCanceled || task.IsFaulted)
 						{

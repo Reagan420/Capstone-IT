@@ -19,8 +19,8 @@ public class authControler : MonoBehaviour
     public GameObject WelcomeScreen;
     public GameObject LoginScreen;
     public GameObject firstUserScreen;
+    public GameObject profileScreen;
 
-    
 
     StorageReference storageRef;
 
@@ -234,11 +234,19 @@ public class authControler : MonoBehaviour
 
     private void Update()
     {
+        try
+        {
             if (UserComunication == null || UserComunication.active == false)
             {
                 UserComunication = GameObject.FindWithTag("feedback");
                 UserComunication.GetComponent<Text>().text = message;
             }
+        }
+        catch
+        {
+
+        }
+            
 
 
     }
@@ -253,6 +261,14 @@ public class authControler : MonoBehaviour
     {
         currentScreen.SetActive(false);
         currentScreen = LoginScreen;
+        currentScreen.SetActive(true);
+
+    }
+
+    public void goToProfileScreen()
+    {
+        currentScreen.SetActive(false);
+        currentScreen = profileScreen;
         currentScreen.SetActive(true);
 
     }
