@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 
@@ -29,7 +30,7 @@ public class uploadfile : MonoBehaviour
 		// Set filters (optional)
 		// It is sufficient to set the filters just once (instead of each time before showing the file browser dialog), 
 		// if all the dialogs will be using the same filters
-		FileBrowser.SetFilters(true, new FileBrowser.Filter(".mp4"), new FileBrowser.Filter(".mp4"));
+		//FileBrowser.SetFilters(true, new FileBrowser.Filter(".mp4"), new FileBrowser.Filter(".mp4"));
 
 		// Set default filter that is selected when the dialog is shown (optional)
 		// Returns true if the default filter is set successfully
@@ -88,19 +89,40 @@ public class uploadfile : MonoBehaviour
 
 		// Dialog is closed
 		// Print whether the user has selected some files/folders or cancelled the operation (FileBrowser.Success)
-		Debug.Log(FileBrowser.Success);
+		//Debug.Log(FileBrowser.Success);
 		if (FileBrowser.Success)
 		{
 			
-			Debug.Log(FileBrowser.Result[0]);
-			
+			//Debug.Log("0: " + FileBrowser.Result[0]);
+			//Debug.Log("0, 0:" + FileBrowser.Result[0][0]);
+			string filename = "";
+			int lenResult = FileBrowser.Result[0].ToString().Length;
+			//Debug.Log("Len: " + FileBrowser.Result[0].ToString().Length.ToString());
+            for (int i = 0; i < lenResult; i++)
+            {
+				if (FileBrowser.Result[0][i].ToString() != "\\")
+                {
+					filename += FileBrowser.Result[0][i].ToString();//filename is no longer inverted
+				}
+                else
+                {
+					filename = "";
+					//Debug.Log("clear");
+
+				}
+            }
+			//FileBrowser.Result[0];
+			StreamWriter writer;
+			string path = filename;
+			//Debug.Log(filename);
+			File.Copy(FileBrowser.Result[0], filename, true);
 
 			// Read the bytes of the first file via FileBrowserHelpers
 			// Contrary to File.ReadAllBytes, this function works on Android 10+, as well
-			byte[] bytes = FileBrowserHelpers.ReadBytesFromFile(FileBrowser.Result[0]);
+			byte[] bytes = FileBrowserHelpers.ReadBytesFromFile(filename);
 
 			// Or, copy the first file to persistentDataPath
-			StorageReference uploadref = storageReference.Child(userID+"/"+ FileBrowser.Result[0]);
+			StorageReference uploadref = storageReference.Child(userID+"/"+ filename);
 			Debug.Log("File upload started!");
 
 			var metadata = new MetadataChange();
@@ -111,15 +133,15 @@ public class uploadfile : MonoBehaviour
 				if(task.IsCanceled || task.IsFaulted)
                 {
 					Debug.Log("error with uploading files");
-                }
+				}
                 else if (task.IsCompleted)
                 {
 					Debug.Log("File uploaded successfully");
                 }
 			});
-			StreamWriter writer;
+			//StreamWriter writer;
 			//bool txtfileRecieved = false;
-			storageReference.GetFileAsync("UserVideos.txt").ContinueWith(task =>
+			storageReference.GetFileAsync("UserVideos.txt").ContinueWith(task =>//should this not have a directory attached?
 			{
 				if (task.IsCanceled || task.IsFaulted)
 				{
@@ -131,16 +153,29 @@ public class uploadfile : MonoBehaviour
 					//txtfileRecieved = true;
 					string path = "UserVideos.txt";
 					writer = new StreamWriter(path, true);
-					writer.WriteLine("Test");
+					//writer.WriteLine("Test");
 					writer.Close();
 
-					StorageReference uploadrefTXT = storageReference.Child(userID + "/" + path);
+					StorageReference uploadrefTXTFirebase = storageReference.Child(userID + "/" + path);
+					StorageReference uploadrefTXTLocal = storageReference.Child("UserVideos.txt");
 					metadata.ContentType = "text/txt";
 					// Delete the file
-					uploadrefTXT.DeleteAsync().ContinueWithOnMainThread(task => {
+					uploadrefTXTFirebase.DeleteAsync().ContinueWithOnMainThread(task => {
 						if (task.IsCompleted)
 						{
 							Debug.Log("File deleted successfully.");
+							uploadrefTXTLocal.PutFileAsync(path, metadata).ContinueWithOnMainThread((task) =>
+							{
+								if (task.IsCanceled || task.IsFaulted)
+								{
+									Debug.Log("error with uploading files");
+								}
+								else if (task.IsCompleted)
+								{
+									Debug.Log("File uploaded successfully");
+									this.gameObject.GetComponent<authControler>().updateUserstories(userID);
+								}
+							});
 						}
 						else if (task.IsCanceled || task.IsFaulted)
 						{
@@ -148,25 +183,10 @@ public class uploadfile : MonoBehaviour
 							// Uh-oh, an error occurred!
 						}
 					});
-					Debug.Log("deleted now uploading new");
-
-					uploadrefTXT.PutFileAsync(path, metadata).ContinueWithOnMainThread((task) =>
-					{
-						if (task.IsCanceled || task.IsFaulted)
-						{
-							Debug.Log("error with uploading files");
-						}
-						else if (task.IsCompleted)
-						{
-							Debug.Log("File uploaded successfully");
-						}
-					});
 					Debug.Log("Done everything, can we go home yet?");
-
+		
 				}
 			});
-
-
 
 		}
 	}

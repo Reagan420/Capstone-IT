@@ -32,11 +32,6 @@ public class VideoLoader : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void testvideoDownload() 
     {
@@ -57,41 +52,9 @@ public class VideoLoader : MonoBehaviour
             }
         });
 
-        
-        /*
-        // Fetch the download URL
-        storageRef.GetDownloadUrlAsync().ContinueWithOnMainThread(task => {
-            if (task.IsCompleted)
-            {
-                Debug.Log("Download URL: " + task.Result);
-                // ... now download the file via WWW or UnityWebRequest.
-            }
-            else if (task.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else if (task.IsCanceled)
-            {
-                Debug.Log("cancel culture");
-            }
-        });
-        */
-
-        //currentVideo = temp;
-        //storageRef.Child("videoplayback.mp4");
-        //Debug.Log(temp);
-
+      
         
     }
     
 
-    /*
-     * storageRef.Child("videoplayback.mp4").GetDownloadUrlAsync().
-            ContinueWithOnMainThread(task =>
-            {
-                if(!task.IsFaulted && !task.IsCanceled)
-                {
-                    StartCoroutine(download)
-                }
-            });*/
 }
