@@ -25,6 +25,7 @@ public class authControler : MonoBehaviour
     public GameObject LoginScreen;
     public GameObject firstUserScreen;
     public GameObject profileScreen;
+    public GameObject shopScreen;
 
 
     FirebaseStorage storage;
@@ -298,6 +299,13 @@ public class authControler : MonoBehaviour
         
         updateUserstories(currUserID);
 
+    }
+
+    public void goToShopScreen()
+    {
+        currentScreen.SetActive(false);
+        currentScreen = shopScreen;
+        currentScreen.SetActive(true);
     }
 
     public void updateUserstories(string userID)
