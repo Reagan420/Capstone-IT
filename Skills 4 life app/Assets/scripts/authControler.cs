@@ -26,7 +26,7 @@ public class authControler : MonoBehaviour
     public GameObject firstUserScreen;
     public GameObject profileScreen;
     public GameObject shopScreen;
-
+    public GameObject videoPlayerMenu;
 
     FirebaseStorage storage;
 
@@ -45,6 +45,10 @@ public class authControler : MonoBehaviour
 
     bool finishedUpdatingtextfile = true;
 
+    public GameObject videoPlayerScreen;
+    string videoName;
+
+    int currUserStory = 0;
 
     //Firebase.Auth.FirebaseAuth auth;
 
@@ -408,20 +412,21 @@ public class authControler : MonoBehaviour
                         int k = i + j + 2;//+2 because we have to seperate the / from the video name and we start 1 back because j = length-1
                         //exameple "EAySNv3oCfQ9jKy3MMYnnNKscwj1/UserVideos.txt",
                         // -> userid/videoname + ",
-                        Debug.Log("3");
+                        //Debug.Log("3");
                         string tempstring = "";
                         while (directorystring[k].ToString() != "\"" && directorystring[k + 1].ToString() != ",")
                         {
-                            Debug.Log(directorystring[k]);
+                            
                             
                             tempstring += directorystring[k];
                             k++;
                             
                         }
-                        Debug.Log("attempting to assign first video");
+                        Debug.Log(tempstring);
+                        //Debug.Log("attempting to assign first video");
                         tempVidNames[numVideo] = tempstring;
 
-                        Debug.Log("first video has been assigned");
+                        //Debug.Log("first video has been assigned");
                         numVideo += 1;//place name in next video
 
                     }
@@ -475,10 +480,62 @@ public class authControler : MonoBehaviour
     public void playVideoButton()
     {
         string uid = user.UserId;
-        string fileName = "TestVideo use THIS.mp4";
-        testvideoDownload(uid, fileName);
+        string fileName = videoName;
+        if (currUserStory == 1)
+        {
+            fileName = GameObject.FindGameObjectWithTag("US1TXT").GetComponent<Text>().text;
+
+        }
+        if (currUserStory == 2)
+        {
+            fileName = GameObject.FindGameObjectWithTag("US2TXT").GetComponent<Text>().text;
+        }
+        if (currUserStory == 3)
+        {
+            fileName = GameObject.FindGameObjectWithTag("US3TXT").GetComponent<Text>().text;
+        }
+        if (currUserStory == 4)
+        {
+            fileName = GameObject.FindGameObjectWithTag("US4TXT").GetComponent<Text>().text;
+        }
+
         currentScreen.SetActive(false);
+        currentScreen = videoPlayerMenu;
+        currentScreen.SetActive(true);
+
+       
+
+
+
+        testvideoDownload(uid, fileName);
+        
     }
+
+    public void US1press()
+    {
+        currUserStory = 1;
+        playVideoButton();
+    }
+
+    public void US2press()
+    {
+        currUserStory = 2;
+        playVideoButton();
+    }
+
+    public void US3press()
+    {
+        currUserStory = 3;
+        playVideoButton();
+    }
+
+    public void US4press()
+    {
+        currUserStory = 4;
+        playVideoButton();
+    }
+
+
 
     public void testvideoDownload(string userID, string filename)
     {
@@ -496,7 +553,6 @@ public class authControler : MonoBehaviour
             else if(task.IsCompleted)
             {
                 Debug.Log("Video recieved and able to be used");
-                
             }
             else
             {
@@ -511,11 +567,13 @@ public class authControler : MonoBehaviour
     public void playVideo(string filepath)
     {
         // Will attach a VideoPlayer to the main camera.
-        GameObject camera = GameObject.Find("Main Camera");
+        videoPlayerScreen = GameObject.FindGameObjectWithTag("Video Player");
 
         // VideoPlayer automatically targets the camera backplane when it is added
         // to a camera object, no need to change videoPlayer.targetCamera.
-        var videoPlayer = camera.AddComponent<VideoPlayer>();
+        var videoPlayer = videoPlayerScreen.GetComponent<VideoPlayer>();
+
+        //var rendertex = videoPlayerScreen.AddComponent<MeshRenderer>();
 
         // Play on awake defaults to true. Set it to false to avoid the url set
         // below to auto-start playback since we're in Start().
@@ -523,7 +581,8 @@ public class authControler : MonoBehaviour
 
         // By default, VideoPlayers added to a camera will use the far plane.
         // Let's target the near plane instead.
-        videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.CameraNearPlane;
+        videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.RenderTexture;
+        //videoPlayer.targetMaterialRenderer = rendertex;
 
         // This will cause our Scene to be visible through the video being played.
         videoPlayer.targetCameraAlpha = 0.5F;
@@ -546,5 +605,6 @@ public class authControler : MonoBehaviour
         // associated with this preparation one can use videoPlayer.Prepare() along with
         // its prepareCompleted event.
         videoPlayer.Play();
+        videoPlayer.playOnAwake = true;
     }
 }

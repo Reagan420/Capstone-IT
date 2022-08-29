@@ -7,6 +7,11 @@ TagManager:
   - feedback
   - authCon
   - story
+  - Video Player
+  - US1TXT
+  - US2TXT
+  - US3TXT
+  - US4TXT
   layers:
   - Default
   - TransparentFX
