@@ -137,7 +137,11 @@ public class authControler : MonoBehaviour
             string uid = user.UserId;
             Debug.Log("name: " + name + " email: " + email + " UserID: " + uid + " unique to firebase project");
         }
-        
+        currentScreen.SetActive(false);
+        currentScreen = firstUserScreen;
+        firstUserScreen.SetActive(true);
+
+        updateUserstories(currUserID);
     }
     public void logout()
     {
@@ -396,8 +400,11 @@ public class authControler : MonoBehaviour
         int numVideo = 0;//start on the first video name
         string[] tempVidNames = new string[8];
 
+        int numCorrectVals = 0;
+
         for (int i = 0; i < directorystring.Length; i++)//for every letter
         {
+            numCorrectVals = 0;
             //Debug.Log("0");
             for (int j = 0; j < currUserID.Length; j++)//check every letter after that if the currUserID matches
             {
@@ -406,10 +413,11 @@ public class authControler : MonoBehaviour
                 //Debug.Log(videonames);
                 if ( i + j < directorystring.Length  && directorystring[i + j] == currUserID[j])//check if all the letters in the id match
                 {
-                    if (j == currUserID.Length-1)//have reached the end of the user id and we have found the correct ID
+                    numCorrectVals += 1;
+                    if (numCorrectVals == currUserID.Length-1)//have reached the end of the user id and we have found the correct ID
                     {
                         Debug.Log("i: " + i + "  j: " + j + "  idLen: " + currUserID.Length + "  totalLength: " + directorystring.Length);
-                        int k = i + j + 2;//+2 because we have to seperate the / from the video name and we start 1 back because j = length-1
+                        int k = i + j + 3;//+2 because we have to seperate the / from the video name and we start 1 back because j = length-1
                         //exameple "EAySNv3oCfQ9jKy3MMYnnNKscwj1/UserVideos.txt",
                         // -> userid/videoname + ",
                         //Debug.Log("3");
@@ -431,10 +439,6 @@ public class authControler : MonoBehaviour
 
                     }
                 }
-                else
-                {
-                    break;
-                }
 
             }
         }
@@ -445,29 +449,15 @@ public class authControler : MonoBehaviour
 
         Debug.Log("loop finished");
         Debug.Log("video 1 is: " + videonames[0]);
-        try
-        {
-            Debug.Log("video 2 is: " + videonames[1]);
-        }
-        catch
-        {
+        Debug.Log("video 2 is: " + videonames[1]);
+        Debug.Log("video 2 is: " + videonames[2]);
 
-        }
         GameObject[] userstories = GameObject.FindGameObjectsWithTag("story");
    
-
-        for (int h = 0; h < userstories.Length; h++)
-        {
-            Debug.Log("Looping"); 
-            if (userstories.Length <= h)
-            {
-                Debug.Log("breaking");
-                break;
-                
-            }
-            userstories[h].transform.GetChild(2).gameObject.GetComponent<Text>().text = videonames[h];
-            h++;
-        }
+        userstories[0].transform.GetChild(2).gameObject.GetComponent<Text>().text = videonames[0];
+        userstories[1].transform.GetChild(2).gameObject.GetComponent<Text>().text = videonames[1];
+        userstories[2].transform.GetChild(2).gameObject.GetComponent<Text>().text = videonames[2];
+        userstories[3].transform.GetChild(2).gameObject.GetComponent<Text>().text = videonames[3];
         Debug.Log("finished finding video names");
 
     }
