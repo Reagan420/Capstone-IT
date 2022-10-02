@@ -226,8 +226,10 @@ public class authControler : MonoBehaviour
         });
 
 
-        // Create a root reference
+        // create user prefrences file
         
+
+
 
     }
 
@@ -250,13 +252,13 @@ public class authControler : MonoBehaviour
                     Debug.Log(task.Exception.ToString());
             // Uh-oh, an error occurred!
         }
-                else
+                else if(task.IsCompleted)
                 {
             // Metadata contains file metadata such as size, content-type, and download URL.
                     StorageMetadata metadata = task.Result;
                     string md5Hash = metadata.Md5Hash;
                     Debug.Log("Finished uploading...");
-                    Debug.Log("File made in cloud!");
+                    this.gameObject.GetComponent<uploadPrefrences>().setPrefrences();//make user prefrences once the directory is made
                 }
             });
 
@@ -296,7 +298,7 @@ public class authControler : MonoBehaviour
         currentScreen.SetActive(false);
         currentScreen = profileScreen;
         currentScreen.SetActive(true);
-
+        this.gameObject.GetComponent<uploadPrefrences>().getPrefrences();
     }
 
     public void nextPageFromLogin()
