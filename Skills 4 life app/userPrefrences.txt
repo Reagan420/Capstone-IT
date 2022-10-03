@@ -1,0 +1,8 @@
+nickname:Default 
+Username:Default 
+email:Default 
+DOB:Default 
+pronoun:Default 
+favColour:Default 
+Intrests:Default 
+

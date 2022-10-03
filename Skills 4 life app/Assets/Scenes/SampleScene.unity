@@ -1443,7 +1443,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &163134140
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4004,6 +4004,20 @@ MonoBehaviour:
   videonames: []
   videoPlayerScreen: {fileID: 978693121}
   thisobj: {fileID: 326495493}
+  nickname: {fileID: 624300342}
+  Username: {fileID: 476243434}
+  email: {fileID: 2028056578}
+  DOB: {fileID: 238298537}
+  pronoun: {fileID: 1334350138}
+  favColour: {fileID: 1874273722}
+  Intrests: {fileID: 1231826050}
+  tempnickname: 
+  tempUsername: 
+  tempemail: 
+  tempDOB: 
+  temppronoun: 
+  tempfavColour: 
+  tempIntrests: 
 --- !u!4 &326495495
 Transform:
   m_ObjectHideFlags: 0
@@ -13649,8 +13663,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 326495497}
-        m_TargetAssemblyTypeName: uploadPrefrences, Assembly-CSharp
+      - m_Target: {fileID: 326495494}
+        m_TargetAssemblyTypeName: authControler, Assembly-CSharp
         m_MethodName: setPrefrences
         m_Mode: 1
         m_Arguments:

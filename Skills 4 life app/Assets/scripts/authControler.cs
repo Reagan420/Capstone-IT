@@ -218,7 +218,7 @@ public class authControler : MonoBehaviour
                     {
                         Debug.Log("updated username: " + profile.DisplayName);
 
-                        makeUserStorageDirectory(newUser.UserId + "/UserVideos.txt");
+                        makeUserStorageDirectory(newUser.UserId +"/"+ prefs);//upload default prefrences as a default file to make the directory
                         message = "You succesfully registered!";
                     }
                 });
@@ -240,11 +240,11 @@ public class authControler : MonoBehaviour
 
         StorageReference readmeRef = storageRef.Child(directory);
 
-        string path = "UserVideos.txt";//all videos users own
+        string path = prefs;//all videos users own
 
         File.WriteAllText(path, "");
-
-
+        makeDefaultPrefrences();
+        //StorageReference uploadref = storageRef.Child(currUserID + "/" + prefs);
         // Upload the file to the path "images/rivers.jpg"
         readmeRef.PutFileAsync(path).ContinueWith((task) => {
                 if (task.IsFaulted || task.IsCanceled)
@@ -255,21 +255,13 @@ public class authControler : MonoBehaviour
                 else if(task.IsCompleted)
                 {
             // Metadata contains file metadata such as size, content-type, and download URL.
-                    StorageMetadata metadata = task.Result;
-                    string md5Hash = metadata.Md5Hash;
+                   // StorageMetadata metadata = task.Result;
+                    //string md5Hash = metadata.Md5Hash;
                     Debug.Log("Finished uploading...");
-                    callprefsmaker();
                 }
         });
     }
 
-    private void callprefsmaker()
-    {
-
-        Debug.Log("starting prefrences");
-        this.gameObject.GetComponent<uploadPrefrences>().makeDefaultPrefrences();
-        Debug.Log("should have made prefrences file");
-    }
 
 
     void getErrorMessage(AuthError errorCode)
@@ -303,7 +295,7 @@ public class authControler : MonoBehaviour
         currentScreen.SetActive(false);
         currentScreen = profileScreen;
         currentScreen.SetActive(true);
-        this.gameObject.GetComponent<uploadPrefrences>().getPrefrences();
+        getPrefrences();
     }
 
     public void nextPageFromLogin()
@@ -604,5 +596,186 @@ public class authControler : MonoBehaviour
         // its prepareCompleted event.
         videoPlayer.Play();
         videoPlayer.playOnAwake = true;
+    }
+
+    public GameObject nickname;
+    public GameObject Username;
+    public GameObject email;
+    public GameObject DOB;
+    public GameObject pronoun;
+    public GameObject favColour;
+    public GameObject Intrests;
+
+    public string tempnickname;
+    public string tempUsername;
+    public string tempemail;
+    public string tempDOB;
+    public string temppronoun;
+    public string tempfavColour;
+    public string tempIntrests;
+
+    string prefs = "userPrefrences.txt";
+
+
+
+
+
+    private void getUserID()
+    {
+        //currUserID = currUserID;//this entire section was originally in another script
+    }
+    public void makeDefaultPrefrences()
+    {
+        //Debug.Log("1");
+        setdefaultprefVariables();
+        //Debug.Log("2");
+        makedefaultprefrencesFile();
+        //Debug.Log("3");
+        StorageReference uploadref = storageRef.Child(currUserID + "/" + prefs);
+        //Debug.Log("4");
+        //uploadFile(prefs, uploadref);
+        Debug.Log("uploaded prefrences");
+    }
+
+    private void setdefaultprefVariables()
+    {
+        tempnickname = "default";
+        tempUsername = "default";
+        tempemail = "default";
+        tempDOB = "default";
+        temppronoun = "default";
+        tempfavColour = "default";
+        tempIntrests = "default";
+    }
+
+    public void getPrefrences()
+    {
+        getUserID();
+        StorageReference uploadref = storageRef.Child(currUserID + "/" + prefs);
+        getFiles(prefs, uploadref);
+
+
+    }
+
+    public void setPrefrences()
+    {
+        getUserID();
+        StorageReference uploadref = storageRef.Child(currUserID + "/" + prefs);
+        //setdefaultprefVariables();
+        makeprefrencesFile();
+        uploadFile(prefs, uploadref);
+    }
+
+    private void makeprefrencesFile()
+    {
+
+        StreamWriter writer;
+        writer = new StreamWriter(prefs);
+        writer.WriteLine(
+            "nickname:" + nickname.gameObject.GetComponent<Text>().text + "\n" +
+            "Username:" + Username.gameObject.GetComponent<Text>().text + "\n" +
+            "email:" + email.gameObject.GetComponent<Text>().text + "\n" +
+            "DOB:" + DOB.gameObject.GetComponent<Text>().text + "\n" +
+            "pronoun:" + pronoun.gameObject.GetComponent<Text>().text + "\n" +
+            "favColour:" + favColour.gameObject.GetComponent<Text>().text + "\n" +
+            "Intrests:" + Intrests.gameObject.GetComponent<Text>().text + "\n"
+            );
+        writer.Close();
+
+
+    }
+
+    private void makedefaultprefrencesFile()
+    {
+
+        StreamWriter writer;
+        writer = new StreamWriter(prefs);
+        writer.WriteLine(
+            "Default \n" +
+            "Default \n" +
+            "Default \n" +
+            "Default \n" +
+            "Default \n" +
+            "Default \n" +
+            "Default \n" 
+            );
+        writer.Close();
+
+
+    }
+
+    public void uploadFile(string filename, StorageReference Location)
+    {
+
+        Location.PutFileAsync(filename).ContinueWithOnMainThread((task) =>
+        {
+            if (task.IsCanceled || task.IsFaulted)
+            {
+                Debug.Log("error with uploading files");
+            }
+            else if (task.IsCompleted)
+            {
+                Debug.Log("File uploaded successfully");
+            }
+            else
+            {
+                Debug.Log("idk what happened, not completed, canceled or faulted");
+            }
+        });
+
+    }
+
+
+    public void getFiles(string filename, StorageReference Location)
+    {
+
+        Location.GetFileAsync(filename).ContinueWithOnMainThread((task) =>
+        {
+            if (task.IsCanceled || task.IsFaulted)
+            {
+                if (task.IsFaulted)
+                {
+                    Debug.Log("error with downloading files");
+                }
+                else
+                {
+                    Debug.Log("file download canceled");
+                }
+
+            }
+            else if (task.IsCompleted)
+            {
+                Debug.Log("File uploaded successfully");
+
+
+                var readText = File.ReadLines(prefs);
+                string[] lines = new string[10];
+                int i = 0;
+                foreach (string s in readText)
+                {
+                    lines[i] = s;
+                    i++;
+                }
+
+
+                nickname.gameObject.GetComponent<Text>().text = lines[0];
+                Username.gameObject.GetComponent<Text>().text = lines[1];
+                email.gameObject.GetComponent<Text>().text = lines[2];
+                DOB.gameObject.GetComponent<Text>().text = lines[3];
+                pronoun.gameObject.GetComponent<Text>().text = lines[4];
+                favColour.gameObject.GetComponent<Text>().text = lines[5];
+                Intrests.gameObject.GetComponent<Text>().text = lines[6];
+
+
+                Debug.Log(nickname.gameObject.GetComponent<Text>().text + " \n");
+                Debug.Log(Username.gameObject.GetComponent<Text>().text + " \n");
+                Debug.Log(email.gameObject.GetComponent<Text>().text + " \n");
+                Debug.Log(DOB.gameObject.GetComponent<Text>().text + " \n");
+                Debug.Log(pronoun.gameObject.GetComponent<Text>().text + " \n");
+                Debug.Log(favColour.gameObject.GetComponent<Text>().text + " \n");
+                Debug.Log(Intrests.gameObject.GetComponent<Text>().text + " \n");
+            }
+        });
+
     }
 }

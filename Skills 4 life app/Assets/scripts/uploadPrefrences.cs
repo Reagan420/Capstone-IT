@@ -121,6 +121,7 @@ public class uploadPrefrences : MonoBehaviour
     public void setPrefrences()
     {
 		getUserID();
+
 		StorageReference uploadref = storageRef.Child(userID + "/" + prefs);
 		//setdefaultprefVariables();
 		makeprefrencesFile();
