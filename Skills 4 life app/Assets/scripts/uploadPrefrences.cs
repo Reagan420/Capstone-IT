@@ -62,8 +62,9 @@ public class uploadPrefrences : MonoBehaviour
 		getUserID();
 		setdefaultprefVariables();
 		makeprefrencesFile();
-		StorageReference uploadref = storageReference.Child(userID + "/");
+		StorageReference uploadref = storageRef.Child(userID + "/" + prefs);
 		uploadFile(prefs, uploadref);
+		Debug.Log("uploaded prefrences");
 	}
 
 	private void setdefaultprefVariables()
@@ -72,140 +73,71 @@ public class uploadPrefrences : MonoBehaviour
 	    Username.gameObject.GetComponent<Text>().text = "default";
 		email.gameObject.GetComponent<Text>().text = "default";
 		DOB.gameObject.GetComponent<Text>().text = "default";
-		pronoun.gameObject.GetComponent<Text>().text = "default";
-		favColour.gameObject.GetComponent<Text>().text = "default";
-		Intrests.gameObject.GetComponent<Text>().text = "default";
+		//pronoun.gameObject.GetComponent<Text>().text = "default";
+		//favColour.gameObject.GetComponent<Text>().text = "default";
+		//Intrests.gameObject.GetComponent<Text>().text = "default";
 	}
 
 	public void getPrefrences()
     {
 		getUserID();
-		StorageReference uploadref = storageReference.Child(userID + "/" + prefs);
+		StorageReference uploadref = storageRef.Child(userID + "/" + prefs);
 		getFiles(prefs, uploadref);
-		string readText = File.ReadAllText(prefs);
 
-		nickname.gameObject.GetComponent<Text>().text = "";
-		Username.gameObject.GetComponent<Text>().text = "";
-		email.gameObject.GetComponent<Text>().text = "";
-		DOB.gameObject.GetComponent<Text>().text = "";
-		pronoun.gameObject.GetComponent<Text>().text = "";
-		favColour.gameObject.GetComponent<Text>().text = "";
-		Intrests.gameObject.GetComponent<Text>().text = "";
-		for (int i = 0; i < readText.Length; i++)
-        {
-			///////////////////nickname
-			if(readText[i].ToString() == "!" && readText[i+1].ToString() == "!")
-            {
-				i += 10;//skip the !!nickname: part of the prefrence
-
-				while (readText[i].ToString() != "!" && readText[i+1].ToString() != "!")
-                {
-					tempnickname += readText[i];
-
-					i++;
-                }
-				i += 2;
-            }
-			/////////////////username
-			if (readText[i].ToString() == "@" && readText[i + 1].ToString() == "@")
-			{
-				i += 11;//skip the !!nickname: part of the prefrence
-
-				while (readText[i].ToString() != "@" && readText[i + 1].ToString() != "@")
-				{
-					tempUsername += readText[i];
-
-					i++;
-				}
-				i += 2;
-			}
-			/////////////////DOB
-			if (readText[i].ToString() == "$" && readText[i + 1].ToString() == "$")
-			{
-				i += 6;//skip the !!nickname: part of the prefrence
-
-				while (readText[i].ToString() != "$" && readText[i + 1].ToString() != "$")
-				{
-					tempDOB += readText[i];
-
-					i++;
-				}
-				i += 2;
-			}
-			/////////////////pronoun
-			if (readText[i].ToString() == "%" && readText[i + 1].ToString() == "%")
-			{
-				i += 10;//skip the !!nickname: part of the prefrence
-
-				while (readText[i].ToString() != "%" && readText[i + 1].ToString() != "%")
-				{
-					temppronoun += readText[i];
-
-					i++;
-				}
-				i += 2;
-			}
-			/////////////////favColour
-			if (readText[i].ToString() == "^" && readText[i + 1].ToString() == "^")
-			{
-				i += 10;//skip the !!nickname: part of the prefrence
-
-				while (readText[i].ToString() != "^" && readText[i + 1].ToString() != "^")
-				{
-					tempfavColour += readText[i];
-					i++;
-				}
-				i += 2;
-			}
-			/////////////////Intrests
-			if (readText[i].ToString() == "*" && readText[i + 1].ToString() == "*")
-			{
-				i += 10;//skip the !!nickname: part of the prefrence
-
-				while (readText[i].ToString() != "*" && readText[i + 1].ToString() != "*")
-				{
-					tempIntrests += readText[i];
-					i++;
-				}
-				i += 2;
-			}
+		var readText = File.ReadLines(prefs);
+		string[] lines = new string[10];
+		int i = 0;
+		foreach (string s in readText)
+		{
+			lines[i] = s;
+			i++;
 		}
+
+
+		nickname.gameObject.GetComponent<Text>().text = lines[0];
+		Username.gameObject.GetComponent<Text>().text = lines[1];
+		email.gameObject.GetComponent<Text>().text = lines[2];
+		DOB.gameObject.GetComponent<Text>().text = lines[3];
+		//pronoun.gameObject.GetComponent<Text>().text = lines[4];
+		//favColour.gameObject.GetComponent<Text>().text = lines[5];
+		//Intrests.gameObject.GetComponent<Text>().text = lines[6];
+
+
 		Debug.Log(nickname.gameObject.GetComponent<Text>().text + " \n");
 		Debug.Log(Username.gameObject.GetComponent<Text>().text + " \n");
 		Debug.Log(email.gameObject.GetComponent<Text>().text + " \n");
 		Debug.Log(DOB.gameObject.GetComponent<Text>().text + " \n");
-		Debug.Log(pronoun.gameObject.GetComponent<Text>().text + " \n");
-		Debug.Log(favColour.gameObject.GetComponent<Text>().text + " \n");
-		Debug.Log(Intrests.gameObject.GetComponent<Text>().text + " \n");
+		//Debug.Log(pronoun.gameObject.GetComponent<Text>().text + " \n");
+		//.Log(favColour.gameObject.GetComponent<Text>().text + " \n");
+		//Debug.Log(Intrests.gameObject.GetComponent<Text>().text + " \n");
 
 	}
 
     public void setPrefrences()
     {
 		getUserID();
-		StorageReference uploadref = storageReference.Child(userID + "/" + prefs);
+		StorageReference uploadref = storageRef.Child(userID + "/" + prefs);
 		setdefaultprefVariables();
 		makeprefrencesFile();
 		uploadFile(prefs, uploadref);
 	}
 
-	private string makeprefrencesFile()
+	private void makeprefrencesFile()
     {
 
 		StreamWriter writer;
 		writer = new StreamWriter(prefs);
         writer.WriteLine(
-			"!!nickname:" + nickname.gameObject.GetComponent<Text>().text + "!!" +
-			"@@Username:" + Username.gameObject.GetComponent<Text>().text + "@@" +
-			"##email:" + email.gameObject.GetComponent<Text>().text + "##" +
-			"$$DOB:" + DOB.gameObject.GetComponent<Text>().text + "$$" +
-			"%%pronoun:" + pronoun.gameObject.GetComponent<Text>().text + "%%" +
-			"^^favColour:" + favColour.gameObject.GetComponent<Text>().text + "^^" +
-			"**Intrests:" + Intrests.gameObject.GetComponent<Text>().text + "**" 
+			"nickname:" + nickname.gameObject.GetComponent<Text>().text + "\n" +
+			"Username:" + Username.gameObject.GetComponent<Text>().text + "\n" +
+			"email:" + email.gameObject.GetComponent<Text>().text + "\n" +
+			"DOB:" + DOB.gameObject.GetComponent<Text>().text + "\n" //+
+			//"pronoun:" + pronoun.gameObject.GetComponent<Text>().text + "\n" +
+			//"favColour:" + favColour.gameObject.GetComponent<Text>().text + "\n" +
+			//"Intrests:" + Intrests.gameObject.GetComponent<Text>().text + "\n"
 			);
         writer.Close();
 
-		return prefs;
 
 	}
 
@@ -223,6 +155,10 @@ public class uploadPrefrences : MonoBehaviour
 			{
 				Debug.Log("File uploaded successfully");
 			}
+            else
+            {
+				Debug.Log("idk what happened, not completed, canceled or faulted");
+            }
 		});
 
     }
@@ -235,7 +171,7 @@ public class uploadPrefrences : MonoBehaviour
 		{
 			if (task.IsCanceled || task.IsFaulted)
 			{
-				Debug.Log("error with uploading files");
+				Debug.Log("error with downloading files");
 			}
 			else if (task.IsCompleted)
 			{
