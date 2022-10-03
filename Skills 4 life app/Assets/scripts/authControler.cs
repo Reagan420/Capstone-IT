@@ -50,6 +50,8 @@ public class authControler : MonoBehaviour
 
     int currUserStory = 0;
 
+    public GameObject thisobj;
+
     //Firebase.Auth.FirebaseAuth auth;
 
     //Firebase.Auth.FirebaseUser user;
@@ -140,7 +142,6 @@ public class authControler : MonoBehaviour
         currentScreen.SetActive(false);
         currentScreen = firstUserScreen;
         firstUserScreen.SetActive(true);
-
         updateUserstories(currUserID);
     }
     public void logout()
@@ -245,26 +246,30 @@ public class authControler : MonoBehaviour
 
 
         // Upload the file to the path "images/rivers.jpg"
-        readmeRef.PutFileAsync(path)
-            .ContinueWith((task) => {
+        readmeRef.PutFileAsync(path).ContinueWith((task) => {
                 if (task.IsFaulted || task.IsCanceled)
                 {
                     Debug.Log(task.Exception.ToString());
             // Uh-oh, an error occurred!
-        }
+                }
                 else if(task.IsCompleted)
                 {
             // Metadata contains file metadata such as size, content-type, and download URL.
                     StorageMetadata metadata = task.Result;
                     string md5Hash = metadata.Md5Hash;
                     Debug.Log("Finished uploading...");
-                    this.gameObject.GetComponent<uploadPrefrences>().setPrefrences();//make user prefrences once the directory is made
+                    callprefsmaker();
                 }
-            });
-
+        });
     }
 
+    private void callprefsmaker()
+    {
 
+        Debug.Log("starting prefrences");
+        this.gameObject.GetComponent<uploadPrefrences>().makeDefaultPrefrences();
+        Debug.Log("should have made prefrences file");
+    }
 
 
     void getErrorMessage(AuthError errorCode)

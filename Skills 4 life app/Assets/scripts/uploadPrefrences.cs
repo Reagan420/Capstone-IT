@@ -59,10 +59,15 @@ public class uploadPrefrences : MonoBehaviour
     }
     public void makeDefaultPrefrences()
     {
+		Debug.Log("0");
 		getUserID();
+		Debug.Log("1");
 		setdefaultprefVariables();
+		Debug.Log("2");
 		makeprefrencesFile();
+		Debug.Log("3");
 		StorageReference uploadref = storageRef.Child(userID + "/" + prefs);
+		Debug.Log("4");
 		uploadFile(prefs, uploadref);
 		Debug.Log("uploaded prefrences");
 	}
@@ -73,9 +78,9 @@ public class uploadPrefrences : MonoBehaviour
 	    Username.gameObject.GetComponent<Text>().text = "default";
 		email.gameObject.GetComponent<Text>().text = "default";
 		DOB.gameObject.GetComponent<Text>().text = "default";
-		//pronoun.gameObject.GetComponent<Text>().text = "default";
-		//favColour.gameObject.GetComponent<Text>().text = "default";
-		//Intrests.gameObject.GetComponent<Text>().text = "default";
+		pronoun.gameObject.GetComponent<Text>().text = "default";
+		favColour.gameObject.GetComponent<Text>().text = "default";
+		Intrests.gameObject.GetComponent<Text>().text = "default";
 	}
 
 	public void getPrefrences()
@@ -98,18 +103,18 @@ public class uploadPrefrences : MonoBehaviour
 		Username.gameObject.GetComponent<Text>().text = lines[1];
 		email.gameObject.GetComponent<Text>().text = lines[2];
 		DOB.gameObject.GetComponent<Text>().text = lines[3];
-		//pronoun.gameObject.GetComponent<Text>().text = lines[4];
-		//favColour.gameObject.GetComponent<Text>().text = lines[5];
-		//Intrests.gameObject.GetComponent<Text>().text = lines[6];
+		pronoun.gameObject.GetComponent<Text>().text = lines[4];
+		favColour.gameObject.GetComponent<Text>().text = lines[5];
+		Intrests.gameObject.GetComponent<Text>().text = lines[6];
 
 
 		Debug.Log(nickname.gameObject.GetComponent<Text>().text + " \n");
 		Debug.Log(Username.gameObject.GetComponent<Text>().text + " \n");
 		Debug.Log(email.gameObject.GetComponent<Text>().text + " \n");
 		Debug.Log(DOB.gameObject.GetComponent<Text>().text + " \n");
-		//Debug.Log(pronoun.gameObject.GetComponent<Text>().text + " \n");
-		//.Log(favColour.gameObject.GetComponent<Text>().text + " \n");
-		//Debug.Log(Intrests.gameObject.GetComponent<Text>().text + " \n");
+		Debug.Log(pronoun.gameObject.GetComponent<Text>().text + " \n");
+		Debug.Log(favColour.gameObject.GetComponent<Text>().text + " \n");
+		Debug.Log(Intrests.gameObject.GetComponent<Text>().text + " \n");
 
 	}
 
@@ -117,7 +122,7 @@ public class uploadPrefrences : MonoBehaviour
     {
 		getUserID();
 		StorageReference uploadref = storageRef.Child(userID + "/" + prefs);
-		setdefaultprefVariables();
+		//setdefaultprefVariables();
 		makeprefrencesFile();
 		uploadFile(prefs, uploadref);
 	}
@@ -131,10 +136,10 @@ public class uploadPrefrences : MonoBehaviour
 			"nickname:" + nickname.gameObject.GetComponent<Text>().text + "\n" +
 			"Username:" + Username.gameObject.GetComponent<Text>().text + "\n" +
 			"email:" + email.gameObject.GetComponent<Text>().text + "\n" +
-			"DOB:" + DOB.gameObject.GetComponent<Text>().text + "\n" //+
-			//"pronoun:" + pronoun.gameObject.GetComponent<Text>().text + "\n" +
-			//"favColour:" + favColour.gameObject.GetComponent<Text>().text + "\n" +
-			//"Intrests:" + Intrests.gameObject.GetComponent<Text>().text + "\n"
+			"DOB:" + DOB.gameObject.GetComponent<Text>().text + "\n" +
+			"pronoun:" + pronoun.gameObject.GetComponent<Text>().text + "\n" +
+			"favColour:" + favColour.gameObject.GetComponent<Text>().text + "\n" +
+			"Intrests:" + Intrests.gameObject.GetComponent<Text>().text + "\n"
 			);
         writer.Close();
 
@@ -171,7 +176,15 @@ public class uploadPrefrences : MonoBehaviour
 		{
 			if (task.IsCanceled || task.IsFaulted)
 			{
-				Debug.Log("error with downloading files");
+				if (task.IsFaulted)
+                {
+					Debug.Log("error with downloading files");
+				}
+				else
+                {
+					Debug.Log("file download canceled");
+                }
+				
 			}
 			else if (task.IsCompleted)
 			{
