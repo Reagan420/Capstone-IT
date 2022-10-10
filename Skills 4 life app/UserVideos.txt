@@ -26,6 +26,10 @@
       "bucket": "skills4life-a8de1.appspot.com"
     },
     {
+      "name": "V08C5R14Eje5gXSZHMkpOp8ahCq1/userPrefrences.txt",
+      "bucket": "skills4life-a8de1.appspot.com"
+    },
+    {
       "name": "XCVszCqYHLZAZNgY4ob5CoZaefP2UserVideos.txt",
       "bucket": "skills4life-a8de1.appspot.com"
     },

@@ -26,7 +26,9 @@ public class authControler : MonoBehaviour
     public GameObject firstUserScreen;
     public GameObject profileScreen;
     public GameObject shopScreen;
+    public GameObject settingsScreen;
     public GameObject videoPlayerMenu;
+    public GameObject mediaOptions;
 
     FirebaseStorage storage;
 
@@ -44,6 +46,7 @@ public class authControler : MonoBehaviour
     public string[] videonames;//can potentially store 500 things
 
     bool finishedUpdatingtextfile = true;
+    bool mediaOptionsToggle = false;
 
     public GameObject videoPlayerScreen;
     string videoName;
@@ -64,10 +67,14 @@ public class authControler : MonoBehaviour
         currentScreen = WelcomeScreen;
         try
         {
-            WelcomeScreen.SetActive(true);
-
-            LoginScreen.SetActive(false);
+            WelcomeScreen.SetActive(false);
+            LoginScreen.SetActive(true);
             firstUserScreen.SetActive(false);
+            profileScreen.SetActive(false);
+            shopScreen.SetActive(false);
+            settingsScreen.SetActive(false);
+            videoPlayerMenu.SetActive(false);
+            mediaOptions.SetActive(false);
         }
         catch
         {
@@ -141,7 +148,7 @@ public class authControler : MonoBehaviour
         }
         currentScreen.SetActive(false);
         currentScreen = firstUserScreen;
-        firstUserScreen.SetActive(true);
+        currentScreen.SetActive(true);
         updateUserstories(currUserID);
     }
     public void logout()
@@ -302,7 +309,7 @@ public class authControler : MonoBehaviour
     {
         currentScreen.SetActive(false);
         currentScreen = firstUserScreen;
-        firstUserScreen.SetActive(true);
+        currentScreen.SetActive(true);
         
         updateUserstories(currUserID);
 
@@ -313,6 +320,28 @@ public class authControler : MonoBehaviour
         currentScreen.SetActive(false);
         currentScreen = shopScreen;
         currentScreen.SetActive(true);
+    }
+
+    public void goToSettingsScreen()
+    {
+        currentScreen.SetActive(false);
+        currentScreen = settingsScreen;
+        currentScreen.SetActive(true);
+    }
+
+    public void mediaOptionsOn()
+    {
+        if (mediaOptionsToggle = false)
+        {
+            mediaOptions.SetActive(true);
+            mediaOptionsToggle = true;
+        }
+        else if (mediaOptionsToggle = true)
+        {
+            mediaOptions.SetActive(false);
+            mediaOptionsToggle = false;
+        }
+
     }
 
     public void updateUserstories(string userID)
