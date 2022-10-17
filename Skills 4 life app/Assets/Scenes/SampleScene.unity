@@ -4037,7 +4037,25 @@ MonoBehaviour:
   shopScreen: {fileID: 2032274022}
   videoPlayerMenu: {fileID: 163134139}
   currUserID: 
+  UserName: 
   videonames: []
+  thisobj: {fileID: 326495493}
+  nickname: {fileID: 624300342}
+  Username: {fileID: 476243434}
+  email: {fileID: 2028056578}
+  DOB: {fileID: 238298537}
+  pronoun: {fileID: 1334350138}
+  favColour: {fileID: 1874273722}
+  Intrests: {fileID: 1231826050}
+  tempnickname: 
+  tempUsername: 
+  tempemail: 
+  tempDOB: 
+  temppronoun: 
+  tempfavColour: 
+  tempIntrests: 
+  currUserStory: 0
+  videoName: 
   videoPlayerScreen: {fileID: 978693121}
 --- !u!4 &326495495
 Transform:
