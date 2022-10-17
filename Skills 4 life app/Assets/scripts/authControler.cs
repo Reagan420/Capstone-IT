@@ -1,4 +1,4 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,13 +55,16 @@ public class authControler : MonoBehaviour
 
     public GameObject thisobj;
 
+    public GameObject subtitles_text;
+    public GameObject subCheckBox;
+
     //Firebase.Auth.FirebaseAuth auth;
 
     //Firebase.Auth.FirebaseUser user;
 
     private void Start()
     {
-        
+
         DatabaseReference refrence = FirebaseDatabase.DefaultInstance.RootReference;
         storageRef = FirebaseStorage.DefaultInstance.RootReference;
         currentScreen = WelcomeScreen;
@@ -98,7 +101,7 @@ public class authControler : MonoBehaviour
         {
 
         }
-       
+
     }
 
 
@@ -153,7 +156,7 @@ public class authControler : MonoBehaviour
     }
     public void logout()
     {
-        if(FirebaseAuth.DefaultInstance.CurrentUser != null)
+        if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
             FirebaseAuth.DefaultInstance.SignOut();
             message = "You have successfully logged out!";
@@ -162,7 +165,7 @@ public class authControler : MonoBehaviour
         {
             message = "Nobody has logged in";
         }
-        
+
     }
 
     public void registerUser()
@@ -225,7 +228,7 @@ public class authControler : MonoBehaviour
                     {
                         Debug.Log("updated username: " + profile.DisplayName);
 
-                        makeUserStorageDirectory(newUser.UserId +"/"+ prefs);//upload default prefrences as a default file to make the directory
+                        makeUserStorageDirectory(newUser.UserId + "/" + prefs);//upload default prefrences as a default file to make the directory
                         message = "You succesfully registered!";
                     }
                 });
@@ -235,7 +238,7 @@ public class authControler : MonoBehaviour
 
 
         // create user prefrences file
-        
+
 
 
 
@@ -254,18 +257,18 @@ public class authControler : MonoBehaviour
         //StorageReference uploadref = storageRef.Child(currUserID + "/" + prefs);
         // Upload the file to the path "images/rivers.jpg"
         readmeRef.PutFileAsync(path).ContinueWith((task) => {
-                if (task.IsFaulted || task.IsCanceled)
-                {
-                    Debug.Log(task.Exception.ToString());
-            // Uh-oh, an error occurred!
-                }
-                else if(task.IsCompleted)
-                {
-            // Metadata contains file metadata such as size, content-type, and download URL.
-                   // StorageMetadata metadata = task.Result;
-                    //string md5Hash = metadata.Md5Hash;
-                    Debug.Log("Finished uploading...");
-                }
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.Log(task.Exception.ToString());
+                // Uh-oh, an error occurred!
+            }
+            else if (task.IsCompleted)
+            {
+                // Metadata contains file metadata such as size, content-type, and download URL.
+                // StorageMetadata metadata = task.Result;
+                //string md5Hash = metadata.Md5Hash;
+                Debug.Log("Finished uploading...");
+            }
         });
     }
 
@@ -288,6 +291,20 @@ public class authControler : MonoBehaviour
         Application.Quit();
 
     }
+
+    //public void genHideSubtitles(){
+
+    //    //subCheckBox.getcomponent<> // check if the textbox is on or off
+    //    if (true)
+    //    {
+    //        subtitles_text.setActive(true);
+    //    }
+    //    else
+    //    {
+    //        subtitles_text.setActive(false);
+    //    }
+
+    //}
 
     public void goToLogin()
     {
