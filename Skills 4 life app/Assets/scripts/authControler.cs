@@ -19,7 +19,7 @@ public class authControler : MonoBehaviour
     public GameObject UserComunication;
     private string message = "";
 
-    private GameObject currentScreen;
+    //private GameObject currentScreen;
 
     public GameObject WelcomeScreen;
     public GameObject LoginScreen;
@@ -46,7 +46,6 @@ public class authControler : MonoBehaviour
     public string[] videonames;//can potentially store 500 things
 
     bool finishedUpdatingtextfile = true;
-    bool mediaOptionsToggle = false;
 
     public GameObject videoPlayerScreen;
     string videoName;
@@ -67,7 +66,7 @@ public class authControler : MonoBehaviour
 
         DatabaseReference refrence = FirebaseDatabase.DefaultInstance.RootReference;
         storageRef = FirebaseStorage.DefaultInstance.RootReference;
-        currentScreen = WelcomeScreen;
+        //currentScreen = WelcomeScreen;
         try
         {
             WelcomeScreen.SetActive(false);
@@ -76,7 +75,7 @@ public class authControler : MonoBehaviour
             profileScreen.SetActive(false);
             shopScreen.SetActive(false);
             settingsScreen.SetActive(false);
-            videoPlayerMenu.SetActive(false);
+            videoPlayerScreen.SetActive(false);
             mediaOptions.SetActive(false);
         }
         catch
@@ -149,9 +148,9 @@ public class authControler : MonoBehaviour
             string uid = user.UserId;
             Debug.Log("name: " + name + " email: " + email + " UserID: " + uid + " unique to firebase project");
         }
-        currentScreen.SetActive(false);
-        currentScreen = firstUserScreen;
-        currentScreen.SetActive(true);
+        LoginScreen.SetActive(false);
+        //currentScreen = firstUserScreen;
+        firstUserScreen.SetActive(true);
         updateUserstories(currUserID);
     }
     public void logout()
@@ -164,6 +163,12 @@ public class authControler : MonoBehaviour
         else
         {
             message = "Nobody has logged in";
+        }
+
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+            LoginScreen.SetActive(true);
         }
 
     }
@@ -306,57 +311,132 @@ public class authControler : MonoBehaviour
 
     //}
 
-    public void goToLogin()
-    {
-        currentScreen.SetActive(false);
-        currentScreen = LoginScreen;
-        currentScreen.SetActive(true);
+    //public void goToLogin()
+    //{
+    //    currentScreen.SetActive(false);
+    //    currentScreen = LoginScreen;
+    //    currentScreen.SetActive(true);
 
-    }
+    //}
 
     public void goToProfileScreen()
     {
-        currentScreen.SetActive(false);
-        currentScreen = profileScreen;
-        currentScreen.SetActive(true);
+        //currentScreen.SetActive(false);
+        //currentScreen = profileScreen;
+        //currentScreen.SetActive(true);
+
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+            profileScreen.SetActive(true);
+        }
+        else if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+            profileScreen.SetActive(true);
+        }
+        else if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+            profileScreen.SetActive(true);
+        }
+
         getPrefrences();
     }
 
-    public void nextPageFromLogin()
-    {
-        currentScreen.SetActive(false);
-        currentScreen = firstUserScreen;
-        currentScreen.SetActive(true);
+    //public void nextPageFromLogin()
+    //{
+    //    currentScreen.SetActive(false);
+    //    currentScreen = firstUserScreen;
+    //    currentScreen.SetActive(true);
         
-        updateUserstories(currUserID);
+    //    updateUserstories(currUserID);
 
-    }
+    //}
 
     public void goToShopScreen()
     {
-        currentScreen.SetActive(false);
-        currentScreen = shopScreen;
-        currentScreen.SetActive(true);
+        //currentScreen.SetActive(false);
+        //currentScreen = shopScreen;
+        //currentScreen.SetActive(true);
+
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+            shopScreen.SetActive(true);
+        }
+        else if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+            shopScreen.SetActive(true);
+        }
+        else if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+            shopScreen.SetActive(true);
+        }
     }
 
     public void goToSettingsScreen()
     {
-        currentScreen.SetActive(false);
-        currentScreen = settingsScreen;
-        currentScreen.SetActive(true);
+        //currentScreen.SetActive(false);
+        //currentScreen = settingsScreen;
+        //currentScreen.SetActive(true);
+
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+            settingsScreen.SetActive(true);
+        }
+        else if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+            settingsScreen.SetActive(true);
+        }
+        else if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+            settingsScreen.SetActive(true);
+        }
+    }
+
+    public void goToLibraryScreen()
+    {
+        //currentScreen.SetActive(false);
+        //currentScreen = settingsScreen;
+        //currentScreen.SetActive(true);
+
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+            firstUserScreen.SetActive(true);
+        }
+        else if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+            firstUserScreen.SetActive(true);
+        }
+        else if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+            firstUserScreen.SetActive(true);
+        }
+        else if (videoPlayerScreen.activeSelf == true)
+        {
+            videoPlayerScreen.SetActive(false);
+            firstUserScreen.SetActive(true);
+        }
     }
 
     public void mediaOptionsOn()
     {
-        if (mediaOptionsToggle = false)
+        if (mediaOptions.activeSelf == false)
         {
             mediaOptions.SetActive(true);
-            mediaOptionsToggle = true;
         }
-        else if (mediaOptionsToggle = true)
+        else if (mediaOptions.activeSelf == true)
         {
             mediaOptions.SetActive(false);
-            mediaOptionsToggle = false;
         }
 
     }
@@ -535,9 +615,9 @@ public class authControler : MonoBehaviour
             fileName = GameObject.FindGameObjectWithTag("US4TXT").GetComponent<Text>().text;
         }
 
-        currentScreen.SetActive(false);
-        currentScreen = videoPlayerMenu;
-        currentScreen.SetActive(true);
+        firstUserScreen.SetActive(false);
+        //currentScreen = videoPlayerMenu;
+        videoPlayerScreen.SetActive(true);
 
        
 
