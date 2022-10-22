@@ -21,7 +21,9 @@ public class uploadfile : MonoBehaviour
 
 	private string userID;
 
-
+	/// <summary>
+	/// initialise variables for file selection
+	/// </summary>
 	void Start()
 	{
 
@@ -71,6 +73,10 @@ public class uploadfile : MonoBehaviour
 		
 	}
 
+
+	/// <summary>
+	/// when user wants to select a file, start the thread responsible for getting the file selector
+	/// </summary>
 	public void onButtonClick()
     {
 		GameObject authcontroler = GameObject.FindGameObjectWithTag("authCon");
@@ -79,6 +85,10 @@ public class uploadfile : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// this thread handles the slecting of files, taking files from the firebase system and getting files from the firebase system
+	/// </summary>
+	/// <returns></returns>
 	IEnumerator ShowLoadDialogCoroutine()
 	{
 		// Show a load file dialog and wait for a response from user

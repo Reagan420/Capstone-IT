@@ -1,4 +1,4 @@
-    using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +11,8 @@ using UnityEngine.Networking;
 using UnityEngine.Video;
 using System;
 using System.Text.RegularExpressions;
+using System.Threading;
+
 
 public class authControler : MonoBehaviour
 {
@@ -33,6 +35,7 @@ public class authControler : MonoBehaviour
     public GameObject settingsScreen;
     public GameObject videoPlayerMenu;
     public GameObject mediaOptions;
+    public GameObject avatarSelect;
 
     /// <summary>
     /// firebase assets
@@ -63,6 +66,10 @@ public class authControler : MonoBehaviour
     public GameObject pronoun;
     public GameObject favColour;
     public GameObject Intrests;
+    public GameObject rhiEnabled;
+    public GameObject timEnabled;
+    public GameObject auslanEnabled;
+
 
     public string tempnickname;
     public string tempUsername;
@@ -71,6 +78,9 @@ public class authControler : MonoBehaviour
     public string temppronoun;
     public string tempfavColour;
     public string tempIntrests;
+    public string preferedAvatar;
+    public bool auslan;
+
     string prefs = "userPrefrences.txt";
     public int currUserStory;
     public string videoName;
@@ -94,7 +104,7 @@ public class authControler : MonoBehaviour
 
         DatabaseReference refrence = FirebaseDatabase.DefaultInstance.RootReference;
         storageRef = FirebaseStorage.DefaultInstance.RootReference;
-        currentScreen = WelcomeScreen;
+        //currentScreen = WelcomeScreen;
         try
         {
             WelcomeScreen.SetActive(false);
@@ -140,7 +150,7 @@ public class authControler : MonoBehaviour
     /// </summary>
     public void Login()
     {
-        FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(emailInput.text, passInput.text)//sign in the user
+        FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(emailInput.text, passInput.GetComponentInParent<InputField>().text)//sign in the user
             .ContinueWith(task => {
 
                 if (task.IsCanceled)//if a problem is encountered then end the script here
@@ -182,8 +192,8 @@ public class authControler : MonoBehaviour
             string uid = user.UserId;
             Debug.Log("name: " + name + " email: " + email + " UserID: " + uid + " unique to firebase project");//used for dev debugging in development for displaying user id mostly
         }
-        currentScreen.SetActive(false);//auto change from loggin screen and go to the users library 
-        currentScreen = firstUserScreen;//change current screen
+        LoginScreen.SetActive(false);//auto change from loggin screen and go to the users library 
+        //currentScreen = firstUserScreen;//change current screen
         firstUserScreen.SetActive(true);//display current screen
         updateUserstories(currUserID);//retrieve user stories document from firebase and scan it for the users stories
     }
@@ -203,7 +213,12 @@ public class authControler : MonoBehaviour
         {
             message = "Nobody has logged in";
         }
-
+        
+        if(profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+            LoginScreen.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -219,7 +234,7 @@ public class authControler : MonoBehaviour
             //return;
         }
         FirebaseUser newUser = null;
-        var RegisterTask = FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(emailInput.text, passInput.text).ContinueWith(task =>
+        var RegisterTask = FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(emailInput.text, passInput.GetComponentInParent<InputField>().text).ContinueWith(task =>
         {
             if (task.IsCanceled)//problem with making new user
             {
@@ -339,11 +354,41 @@ public class authControler : MonoBehaviour
     /// change current screen to login screen
     /// </summary>
     public void goToLogin()
-    {
-        currentScreen.SetActive(false);
-        currentScreen = LoginScreen;
-        currentScreen.SetActive(true);
+    {   
+        if(firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+        }
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+        }
+        if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+        }
+        if (WelcomeScreen.activeSelf == true)
+        {
+            WelcomeScreen.SetActive(false);
+        }
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+        }
+        if (videoPlayerMenu.activeSelf == true)
+        {
+            videoPlayerMenu.SetActive(false);
+        }
+        if (mediaOptions.activeSelf == true)
+        {
+            mediaOptions.SetActive(false);
+        }
+        if (avatarSelect.activeSelf == true)
+        {
+            avatarSelect.SetActive(false);
+        }
 
+    LoginScreen.SetActive(true);
     }
 
     /// <summary>
@@ -351,18 +396,83 @@ public class authControler : MonoBehaviour
     /// </summary>
     public void goToProfileScreen()
     {
-        currentScreen.SetActive(false);
-        currentScreen = profileScreen;
-        currentScreen.SetActive(true);
+
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+        }
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+        }
+        if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+        }
+        if (WelcomeScreen.activeSelf == true)
+        {
+            WelcomeScreen.SetActive(false);
+        }
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+        }
+        if (videoPlayerMenu.activeSelf == true)
+        {
+            videoPlayerMenu.SetActive(false);
+        }
+        if (mediaOptions.activeSelf == true)
+        {
+            mediaOptions.SetActive(false);
+        }
+        if (avatarSelect.activeSelf == true)
+        {
+            avatarSelect.SetActive(false);
+        }
+
+        profileScreen.SetActive(true);
         getPrefrences();
     }
 
     //change current screen to library screen (sorry for the terrible method name)
     public void nextPageFromLogin()
     {
-        currentScreen.SetActive(false);
-        currentScreen = firstUserScreen;
-        currentScreen.SetActive(true);
+
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+        }
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+        }
+        if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+        }
+        if (WelcomeScreen.activeSelf == true)
+        {
+            WelcomeScreen.SetActive(false);
+        }
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+        }
+        if (videoPlayerMenu.activeSelf == true)
+        {
+            videoPlayerMenu.SetActive(false);
+        }
+        if (mediaOptions.activeSelf == true)
+        {
+            mediaOptions.SetActive(false);
+        }
+        if (avatarSelect.activeSelf == true)
+        {
+            avatarSelect.SetActive(false);
+        }
+
+        firstUserScreen.SetActive(true);
+
         
         updateUserstories(currUserID);
 
@@ -373,16 +483,123 @@ public class authControler : MonoBehaviour
     /// </summary>
     public void goToShopScreen()
     {
-        currentScreen.SetActive(false);
-        currentScreen = shopScreen;
-        currentScreen.SetActive(true);
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+        }
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+        }
+        if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+        }
+        if (WelcomeScreen.activeSelf == true)
+        {
+            WelcomeScreen.SetActive(false);
+        }
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+        }
+        if (videoPlayerMenu.activeSelf == true)
+        {
+            videoPlayerMenu.SetActive(false);
+        }
+        if (mediaOptions.activeSelf == true)
+        {
+            mediaOptions.SetActive(false);
+        }
+        if (avatarSelect.activeSelf == true)
+        {
+            avatarSelect.SetActive(false);
+        }
+
+        shopScreen.SetActive(true);
+
     }
+
+
+    /// <summary>
+    /// go the screen which enables purchese for user
+    /// </summary>
+    public void goToavatarSelectScreen()
+    {
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+        }
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+        }
+        if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+        }
+        if (WelcomeScreen.activeSelf == true)
+        {
+            WelcomeScreen.SetActive(false);
+        }
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+        }
+        if (videoPlayerMenu.activeSelf == true)
+        {
+            videoPlayerMenu.SetActive(false);
+        }
+        if (mediaOptions.activeSelf == true)
+        {
+            mediaOptions.SetActive(false);
+        }
+        if (avatarSelect.activeSelf == true)
+        {
+            avatarSelect.SetActive(false);
+        }
+
+        avatarSelect.SetActive(true);
+
+    }
+
 
     public void goToSettingsScreen()
     {
-        currentScreen.SetActive(false);
-        currentScreen = settingsScreen;
-        currentScreen.SetActive(true);
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+        }
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+        }
+        if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+        }
+        if (WelcomeScreen.activeSelf == true)
+        {
+            WelcomeScreen.SetActive(false);
+        }
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+        }
+        if (videoPlayerMenu.activeSelf == true)
+        {
+            videoPlayerMenu.SetActive(false);
+        }
+        if (mediaOptions.activeSelf == true)
+        {
+            mediaOptions.SetActive(false);
+        }
+        if (avatarSelect.activeSelf == true)
+        {
+            avatarSelect.SetActive(false);
+        }
+
+        settingsScreen.SetActive(true);
     }
 
     public void mediaOptionsOn()
@@ -712,6 +929,8 @@ public class authControler : MonoBehaviour
         temppronoun = "default";
         tempfavColour = "default";
         tempIntrests = "default";
+        preferedAvatar = "Rhiana";
+        auslan = false;
     }
 
     /// <summary>
@@ -743,13 +962,13 @@ public class authControler : MonoBehaviour
         StreamWriter writer;
         writer = new StreamWriter(prefs);
         writer.WriteLine(
-            "nickname:" + nickname.gameObject.GetComponent<Text>().text + "\n" +
-            "Username:" + Username.gameObject.GetComponent<Text>().text + "\n" +
-            "email:" + email.gameObject.GetComponent<Text>().text + "\n" +
-            "DOB:" + DOB.gameObject.GetComponent<Text>().text + "\n" +
-            "pronoun:" + pronoun.gameObject.GetComponent<Text>().text + "\n" +
-            "favColour:" + favColour.gameObject.GetComponent<Text>().text + "\n" +
-            "Intrests:" + Intrests.gameObject.GetComponent<Text>().text + "\n"
+             nickname.gameObject.GetComponent<Text>().text + "\n" +
+             Username.gameObject.GetComponent<Text>().text + "\n" +
+             email.gameObject.GetComponent<Text>().text + "\n" +
+             DOB.gameObject.GetComponent<Text>().text + "\n" +
+             pronoun.gameObject.GetComponent<Text>().text + "\n" +
+             favColour.gameObject.GetComponent<Text>().text + "\n" +
+             Intrests.gameObject.GetComponent<Text>().text + "\n"
             );
         writer.Close();
 
@@ -770,7 +989,9 @@ public class authControler : MonoBehaviour
             "Default \n" +
             "Default \n" +
             "Default \n" +
-            "Default \n" 
+            "Default \n" +
+            "Rhiana \n" +
+            "False"
             );
         writer.Close();
 
@@ -805,12 +1026,67 @@ public class authControler : MonoBehaviour
     }
 
     /// <summary>
+    /// generatue auslan prefs and avatar prefs
+    /// </summary>
+    public void setAvatarPrefs()
+    {
+        StorageReference uploadref = storageRef.Child(currUserID + "/" + prefs);
+        //setdefaultprefVariables();
+        getFiles(prefs, uploadref, false);
+        Thread.Sleep(1000);
+        UpdateAuslanPrefs(prefs);
+        Thread.Sleep(1000);
+        Debug.Log("setting avatar prefs");
+        uploadFile(prefs, uploadref);
+        Thread.Sleep(1000);
+    }
+
+    
+
+
+    /// <summary>
+    /// allows the function to retrieve
+    /// </summary>
+    private void UpdateAuslanPrefs(string prefs1)
+    {
+        string[] arrLine = File.ReadAllLines(prefs1);
+
+        if (rhiEnabled.GetComponent<Toggle>().isOn == true)
+        {
+            arrLine[arrLine.Length - 2] = "Rhiana";
+            Debug.Log("rhi toggled");
+        }
+        else if (timEnabled.GetComponent<Toggle>().isOn == true)
+        {
+            arrLine[arrLine.Length - 2] = "Tim";
+            Debug.Log("tim toggled");
+        }
+
+        if (auslanEnabled.GetComponent<Toggle>().isOn == true)
+        {
+            arrLine[arrLine.Length - 1] = "True";
+            Debug.Log("aus on");
+        }
+        else
+        {
+            arrLine[arrLine.Length - 1] = "False";
+            Debug.Log("aus off");
+        }
+        
+
+
+
+
+        File.WriteAllLines(prefs, arrLine);
+    }
+
+    /// <summary>
     /// take a generic file called filename from location in firebase and 
     /// download it
     /// </summary>
     /// <param name="filename"></param>
     /// <param name="Location"></param>
-    public void getFiles(string filename, StorageReference Location)
+    public void getFiles(string filename, StorageReference Location, bool sendingBasePrefs = true)
     {
 
         Location.GetFileAsync(filename).ContinueWithOnMainThread((task) =>
@@ -829,26 +1105,35 @@ public class authControler : MonoBehaviour
             }
             else if (task.IsCompleted)
             {
-                Debug.Log("File uploaded successfully");
+                Debug.Log("File gotten successfully");
 
-
-                var readText = File.ReadLines(prefs);
-                string[] lines = new string[10];
-                int i = 0;
-                foreach (string s in readText)
+                if(sendingBasePrefs == true)
                 {
-                    lines[i] = s;
-                    i++;
-                }
+                    var readText = File.ReadLines(prefs);
+                    string[] lines = new string[10];
+                    int i = 0;
+                    foreach (string s in readText)
+                    {
+                        lines[i] = s;
+                        i++;
+                    }
 
-                //once the prefrences have been retrieved, put them where the user can see them and change them
-                nickname.gameObject.GetComponent<Text>().text = lines[0];
-                Username.gameObject.GetComponent<Text>().text = lines[1];
-                email.gameObject.GetComponent<Text>().text = lines[2];
-                DOB.gameObject.GetComponent<Text>().text = lines[3];
-                pronoun.gameObject.GetComponent<Text>().text = lines[4];
-                favColour.gameObject.GetComponent<Text>().text = lines[5];
-                Intrests.gameObject.GetComponent<Text>().text = lines[6];
+
+                    //once the prefrences have been retrieved, put them where the user can see them and change them
+                    nickname.gameObject.GetComponent<Text>().text = lines[0];
+                    Username.gameObject.GetComponent<Text>().text = lines[1];
+                    email.gameObject.GetComponent<Text>().text = lines[2];
+                    DOB.gameObject.GetComponent<Text>().text = lines[3];
+                    pronoun.gameObject.GetComponent<Text>().text = lines[4];
+                    favColour.gameObject.GetComponent<Text>().text = lines[5];
+                    Intrests.gameObject.GetComponent<Text>().text = lines[6];
+                }
+                else if (sendingBasePrefs == false)
+                {
+
+                }
+             
+                
 
                 /*
                 Debug.Log(nickname.gameObject.GetComponent<Text>().text + " \n");

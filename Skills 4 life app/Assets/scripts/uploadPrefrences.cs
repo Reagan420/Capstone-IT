@@ -38,6 +38,11 @@ public class uploadPrefrences : MonoBehaviour
 
 	string prefs = "userPrefrences";
 
+	/// <summary>
+	/// i dont believe this file is currently being used as there was a thread that just couldnt make it to this script for some reason
+	/// despite my methodology for calling methods on this script being the same as other ways that worked on other scripts
+	/// this code was copy pastad to auth controler for maximum spagget code... 
+	/// </summary>
 
 	// Start is called before the first frame update
 	void Start()
