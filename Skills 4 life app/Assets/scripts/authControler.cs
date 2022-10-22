@@ -12,7 +12,10 @@ using UnityEngine.Video;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using System.Net.Mail;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
+using System.Net;
 
 public class authControler : MonoBehaviour
 {
@@ -206,7 +209,7 @@ public class authControler : MonoBehaviour
     {
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
-            FirebaseAuth.DefaultInstance.SignOut();
+            auth.SignOut();
             message = "You have successfully logged out!";
         }
         else
@@ -261,7 +264,8 @@ public class authControler : MonoBehaviour
                 message = "You succesfully registered!";
 
                 UserProfile profile = new UserProfile { DisplayName = userName.text };
-
+                //SendIntroEmails(newUser.Email);//try to send a email
+               
                 var profileTask = newUser.UpdateUserProfileAsync(profile).ContinueWith(task =>
                 {
                     if (task.IsCanceled)
@@ -287,6 +291,7 @@ public class authControler : MonoBehaviour
 
                         makeUserStorageDirectory(newUser.UserId + "/" + prefs);//upload default prefrences as a default file to make the directory
                         message = "You succesfully registered!";
+                        
                     }
                 });
             }
@@ -294,6 +299,46 @@ public class authControler : MonoBehaviour
         });
     }
 
+
+
+    /// <summary>
+    /// this is all working right up to: smtpServer.Send(mail);
+    /// i have no idea whats going wrong and i dont have time to fix it. 
+    /// its not even giving me a error :'( 
+    /// </summary>
+    /// <param name="useremail"></param>
+    void SendIntroEmails(string useremail)
+    {
+        Debug.Log("starting sending email");
+        MailMessage mail = new MailMessage();
+        mail.From = new MailAddress("skills4lifefirebase@gmail.com");
+        mail.To.Add(useremail);
+        mail.Subject = "Account creation";
+        mail.Body = "Hello!, \n Congratulations on making a new account in the skills for life app. If you encounter any problems please message this email adress";
+        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+        smtpServer.Timeout = 10000;
+        smtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+        smtpServer.UseDefaultCredentials = false;
+        smtpServer.Port = 587;//GIVE CORRECT PORT HERE
+        Debug.Log("mid working");
+        smtpServer.Credentials = new System.Net.NetworkCredential("skills4lifefirebase@gmail.com", "AdminFirebase") as ICredentialsByHost;
+        Debug.Log("mid2 working");
+        smtpServer.EnableSsl = true;
+        Debug.Log("mid3 working");
+        ServicePointManager.ServerCertificateValidationCallback =
+        delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        { return true; };
+        Debug.Log("mid3 working");
+        smtpServer.Send(mail);
+        Debug.Log("end working");
+        mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+        if(mail.DeliveryNotificationOptions == DeliveryNotificationOptions.OnFailure)
+        {
+            Debug.Log("email failure");
+        }
+        //smtpServer.SendAsync(mail)
+        Debug.Log("successfully sent email!!!");
+    }
     private void makeUserStorageDirectory(string directory)
     {
         StorageReference storageRef = FirebaseStorage.DefaultInstance.RootReference;
@@ -631,7 +676,7 @@ public class authControler : MonoBehaviour
         metadata.ContentType = "video/mp4";
         StreamWriter writer;
 
-        storageReference.GetFileAsync("UserVideos.txt").ContinueWith(task =>//for some fucking magical reason this gets all of the files in all directories.
+        storageReference.GetFileAsync("file://UserVideos.txt").ContinueWith(task =>//for some fucking magical reason this gets all of the files in all directories.
         //this is some fucking magic boys
         {
             if (task.IsCanceled || task.IsFaulted)
@@ -686,7 +731,7 @@ public class authControler : MonoBehaviour
     /// </summary>
     public void getNamesOfUserVideos()
     {
-        storageReference.GetFileAsync("UserVideos.txt").ContinueWith(task =>//for some  magical reason this gets all of the files in all directories.
+        storageReference.GetFileAsync("file://UserVideos.txt").ContinueWith(task =>//for some  magical reason this gets all of the files in all directories.
         //this is some fucking magic boys
         {
             if (task.IsCanceled || task.IsFaulted)
@@ -845,7 +890,7 @@ public class authControler : MonoBehaviour
         storageReference = FirebaseStorage.DefaultInstance.RootReference;
         StorageReference uploadref = storageReference.Child(userID + "/" + filename);
 
-        storageRef.GetFileAsync(filename).ContinueWith(task =>
+        storageRef.GetFileAsync("file://"+filename).ContinueWith(task =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
@@ -922,14 +967,14 @@ public class authControler : MonoBehaviour
     /// </summary>
     private void setdefaultprefVariables()
     {
-        tempnickname = "default";
-        tempUsername = "default";
-        tempemail = "default";
-        tempDOB = "default";
-        temppronoun = "default";
-        tempfavColour = "default";
-        tempIntrests = "default";
-        preferedAvatar = "Rhiana";
+        tempnickname = "Nickname: Default";
+        tempUsername = "Username: Default";
+        tempemail = "Email: Default";
+        tempDOB = "DOB: Default";
+        temppronoun = "Pronoun: Default";
+        tempfavColour = "Favourite colour: Default";
+        tempIntrests = "Intrests: Default";
+        preferedAvatar = "Prefered avatar: Rhiana";
         auslan = false;
     }
 
@@ -983,19 +1028,17 @@ public class authControler : MonoBehaviour
         StreamWriter writer;
         writer = new StreamWriter(prefs);
         writer.WriteLine(
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Rhiana \n" +
-            "False"
+            "Nickname: Default \n" +
+            "Username: Default \n" +
+            "Email: Default \n" +
+            "DOB: Default \n" +
+            "Pronoun: Default \n" +
+            "Favourite colour: Default \n" +
+            "Intrests: Default \n" +
+            "Prefered avatar: Rhiana \n" +
+            "Auslan mode: False"
             );
         writer.Close();
-
-
     }
 
     /// <summary>
@@ -1089,7 +1132,7 @@ public class authControler : MonoBehaviour
     public void getFiles(string filename, StorageReference Location, bool sendingBasePrefs = true)
     {
 
-        Location.GetFileAsync(filename).ContinueWithOnMainThread((task) =>
+        Location.GetFileAsync("file://"+ filename).ContinueWithOnMainThread((task) =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
@@ -1133,17 +1176,6 @@ public class authControler : MonoBehaviour
 
                 }
              
-                
-
-                /*
-                Debug.Log(nickname.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(Username.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(email.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(DOB.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(pronoun.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(favColour.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(Intrests.gameObject.GetComponent<Text>().text + " \n");
-                */
             }
         });
 
