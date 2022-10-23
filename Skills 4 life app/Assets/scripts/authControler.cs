@@ -38,7 +38,10 @@ public class authControler : MonoBehaviour
     public GameObject settingsScreen;
     public GameObject videoPlayerMenu;
     public GameObject mediaOptions;
+    public GameObject playButton;
+    public GameObject pauseButton;
     public GameObject avatarSelect;
+    public VideoPlayer videoPlayer;
 
     /// <summary>
     /// firebase assets
@@ -57,7 +60,6 @@ public class authControler : MonoBehaviour
     public string[] videonames;//can potentially store 500 things
 
     bool finishedUpdatingtextfile = true;
-    bool mediaOptionsToggle = false;
 
    /// <summary>
    /// variables for the prefrences part of the script mostly
@@ -686,17 +688,15 @@ public class authControler : MonoBehaviour
     }
 
 
-    public void mediaOptionsOn()
+    public void mediaOptionsToggle()
     {
-        if (mediaOptionsToggle = false)
+        if (mediaOptions.activeSelf == false)
         {
             mediaOptions.SetActive(true);
-            mediaOptionsToggle = true;
         }
-        else if (mediaOptionsToggle = true)
+        else if (mediaOptions.activeSelf == true)
         {
             mediaOptions.SetActive(false);
-            mediaOptionsToggle = false;
         }
 
     }
@@ -1216,5 +1216,21 @@ public class authControler : MonoBehaviour
             }
         });
 
+    }
+
+    public void playPause()
+    {
+        if (playButton.activeSelf == true)
+        {
+            videoPlayer.Pause();
+            playButton.SetActive(false);
+            pauseButton.SetActive(true);
+        }
+        else if (pauseButton.activeSelf == true)
+        {
+            videoPlayer.Play();
+            playButton.SetActive(true);
+            pauseButton.SetActive(false);
+        }
     }
 }
