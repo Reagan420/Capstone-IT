@@ -40,6 +40,8 @@ public class authControler : MonoBehaviour
     public GameObject mediaOptions;
     public GameObject playButton;
     public GameObject pauseButton;
+    public GameObject subtitlesUI;
+    public GameObject auslanUI;
     public GameObject avatarSelect;
     public VideoPlayer videoPlayer;
 
@@ -1233,4 +1235,22 @@ public class authControler : MonoBehaviour
             pauseButton.SetActive(false);
         }
     }
+
+    public void subtitleUIToggle()
+    {
+        if (subtitlesUI.activeSelf == true)
+        {
+            subtitlesUI.SetActive(false);
+        }
+        else if (subtitlesUI.activeSelf == false)
+        {
+            subtitlesUI.SetActive(false);
+        }
+    }
+
+    public void auslanUIToggle()
+    {
+
+    }
+
 }
