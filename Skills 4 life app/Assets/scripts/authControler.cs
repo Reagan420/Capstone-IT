@@ -647,6 +647,45 @@ public class authControler : MonoBehaviour
         settingsScreen.SetActive(true);
     }
 
+    public void goToMediaScreen()
+    {
+        if (firstUserScreen.activeSelf == true)
+        {
+            firstUserScreen.SetActive(false);
+        }
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+        }
+        if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+        }
+        if (WelcomeScreen.activeSelf == true)
+        {
+            WelcomeScreen.SetActive(false);
+        }
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+        }
+        if (videoPlayerMenu.activeSelf == true)
+        {
+            videoPlayerMenu.SetActive(false);
+        }
+        if (mediaOptions.activeSelf == true)
+        {
+            mediaOptions.SetActive(false);
+        }
+        if (avatarSelect.activeSelf == true)
+        {
+            avatarSelect.SetActive(false);
+        }
+
+        videoPlayerMenu.SetActive(true);
+    }
+
+
     public void mediaOptionsOn()
     {
         if (mediaOptionsToggle = false)
@@ -832,9 +871,7 @@ public class authControler : MonoBehaviour
             fileName = GameObject.FindGameObjectWithTag("US4TXT").GetComponent<Text>().text;
         }
         //once video is selected change screen and display the video
-        currentScreen.SetActive(false);
-        currentScreen = videoPlayerMenu;
-        currentScreen.SetActive(true);
+        goToMediaScreen();
 
         testvideoDownload(uid, fileName);
         

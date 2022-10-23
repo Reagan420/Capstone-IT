@@ -1,9 +1,8 @@
-Nickname: Default 
-Username: Default 
-Email: Default 
-DOB: Default 
-Pronoun: Default 
-Favourite colour: Default 
-Intrests: Default 
-Prefered avatar: Rhiana 
-Auslan mode: False
+Default 
+Default 
+Default 
+Default 
+Default 
+Default 
+Default 
+
