@@ -268,7 +268,6 @@ public class authControler : MonoBehaviour
                 message = "You succesfully registered!";
 
                 UserProfile profile = new UserProfile { DisplayName = userName.text };
-                //SendIntroEmails(newUser.Email);//try to send a email
                
                 var profileTask = newUser.UpdateUserProfileAsync(profile).ContinueWith(task =>
                 {
@@ -965,41 +964,31 @@ public class authControler : MonoBehaviour
     }
     public void playVideo(string filepath)
     {
-        Debug.Log("1");
         // Will attach a VideoPlayer to the main camera.
         videoPlayerScreen = GameObject.FindGameObjectWithTag("Video Player");
-        Debug.Log("2");
         // VideoPlayer automatically targets the camera backplane when it is added
         // to a camera object, no need to change videoPlayer.targetCamera.
         var videoPlayer = videoPlayerScreen.GetComponent<VideoPlayer>();
-        Debug.Log("3");
         //var rendertex = videoPlayerScreen.AddComponent<MeshRenderer>();
 
         // Play on awake defaults to true. Set it to false to avoid the url set
         // below to auto-start playback since we're in Start().
         videoPlayer.playOnAwake = false;
-        Debug.Log("4");
         // By default, VideoPlayers added to a camera will use the far plane.
         // Let's target the near plane instead.
         videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.RenderTexture;
         //videoPlayer.targetMaterialRenderer = rendertex;
-        Debug.Log("5");
         // This will cause our Scene to be visible through the video being played.
         videoPlayer.targetCameraAlpha = 0.5F;
-        Debug.Log("6");
         // Set the video to play. URL supports local absolute or relative paths.
         // Here, using absolute.
         videoPlayer.url = filepath;
-        Debug.Log("7");
         // Skip the first 100 frames.
         //videoPlayer.frame = 100;
-        Debug.Log("8");
         // Restart from beginning when done.
         videoPlayer.isLooping = false;
-        Debug.Log("9");
         // Each time we reach the end, we slow down the playback by a factor of 10.
         //videoPlayer.loopPointReached += EndReached;
-        Debug.Log("10");
         // Start playback. This means the VideoPlayer may have to prepare (reserve
         // resources, pre-load a few frames, etc.). To better control the delays
         // associated with this preparation one can use videoPlayer.Prepare() along with
