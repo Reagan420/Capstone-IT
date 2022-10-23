@@ -12,7 +12,10 @@ using UnityEngine.Video;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+using System.Net.Mail;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
+using System.Net;
 
 public class authControler : MonoBehaviour
 {
@@ -35,7 +38,12 @@ public class authControler : MonoBehaviour
     public GameObject settingsScreen;
     public GameObject videoPlayerMenu;
     public GameObject mediaOptions;
+    public GameObject playButton;
+    public GameObject pauseButton;
+    public GameObject subtitlesUI;
+    public GameObject auslanUI;
     public GameObject avatarSelect;
+    public VideoPlayer videoPlayer;
 
     /// <summary>
     /// firebase assets
@@ -54,7 +62,6 @@ public class authControler : MonoBehaviour
     public string[] videonames;//can potentially store 500 things
 
     bool finishedUpdatingtextfile = true;
-    bool mediaOptionsToggle = false;
 
    /// <summary>
    /// variables for the prefrences part of the script mostly
@@ -206,7 +213,7 @@ public class authControler : MonoBehaviour
     {
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
-            FirebaseAuth.DefaultInstance.SignOut();
+            auth.SignOut();
             message = "You have successfully logged out!";
         }
         else
@@ -261,7 +268,8 @@ public class authControler : MonoBehaviour
                 message = "You succesfully registered!";
 
                 UserProfile profile = new UserProfile { DisplayName = userName.text };
-
+                //SendIntroEmails(newUser.Email);//try to send a email
+               
                 var profileTask = newUser.UpdateUserProfileAsync(profile).ContinueWith(task =>
                 {
                     if (task.IsCanceled)
@@ -287,6 +295,7 @@ public class authControler : MonoBehaviour
 
                         makeUserStorageDirectory(newUser.UserId + "/" + prefs);//upload default prefrences as a default file to make the directory
                         message = "You succesfully registered!";
+                        
                     }
                 });
             }
@@ -294,6 +303,46 @@ public class authControler : MonoBehaviour
         });
     }
 
+
+
+    /// <summary>
+    /// this is all working right up to: smtpServer.Send(mail);
+    /// i have no idea whats going wrong and i dont have time to fix it. 
+    /// its not even giving me a error :'( 
+    /// </summary>
+    /// <param name="useremail"></param>
+    void SendIntroEmails(string useremail)
+    {
+        Debug.Log("starting sending email");
+        MailMessage mail = new MailMessage();
+        mail.From = new MailAddress("skills4lifefirebase@gmail.com");
+        mail.To.Add(useremail);
+        mail.Subject = "Account creation";
+        mail.Body = "Hello!, \n Congratulations on making a new account in the skills for life app. If you encounter any problems please message this email adress";
+        SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+        smtpServer.Timeout = 10000;
+        smtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+        smtpServer.UseDefaultCredentials = false;
+        smtpServer.Port = 587;//GIVE CORRECT PORT HERE
+        Debug.Log("mid working");
+        smtpServer.Credentials = new System.Net.NetworkCredential("skills4lifefirebase@gmail.com", "AdminFirebase") as ICredentialsByHost;
+        Debug.Log("mid2 working");
+        smtpServer.EnableSsl = true;
+        Debug.Log("mid3 working");
+        ServicePointManager.ServerCertificateValidationCallback =
+        delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        { return true; };
+        Debug.Log("mid3 working");
+        smtpServer.Send(mail);
+        Debug.Log("end working");
+        mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+        if(mail.DeliveryNotificationOptions == DeliveryNotificationOptions.OnFailure)
+        {
+            Debug.Log("email failure");
+        }
+        //smtpServer.SendAsync(mail)
+        Debug.Log("successfully sent email!!!");
+    }
     private void makeUserStorageDirectory(string directory)
     {
         StorageReference storageRef = FirebaseStorage.DefaultInstance.RootReference;
@@ -602,17 +651,54 @@ public class authControler : MonoBehaviour
         settingsScreen.SetActive(true);
     }
 
-    public void mediaOptionsOn()
+    public void goToMediaScreen()
     {
-        if (mediaOptionsToggle = false)
+        if (firstUserScreen.activeSelf == true)
         {
-            mediaOptions.SetActive(true);
-            mediaOptionsToggle = true;
+            firstUserScreen.SetActive(false);
         }
-        else if (mediaOptionsToggle = true)
+        if (settingsScreen.activeSelf == true)
+        {
+            settingsScreen.SetActive(false);
+        }
+        if (shopScreen.activeSelf == true)
+        {
+            shopScreen.SetActive(false);
+        }
+        if (WelcomeScreen.activeSelf == true)
+        {
+            WelcomeScreen.SetActive(false);
+        }
+        if (profileScreen.activeSelf == true)
+        {
+            profileScreen.SetActive(false);
+        }
+        if (videoPlayerMenu.activeSelf == true)
+        {
+            videoPlayerMenu.SetActive(false);
+        }
+        if (mediaOptions.activeSelf == true)
         {
             mediaOptions.SetActive(false);
-            mediaOptionsToggle = false;
+        }
+        if (avatarSelect.activeSelf == true)
+        {
+            avatarSelect.SetActive(false);
+        }
+
+        videoPlayerMenu.SetActive(true);
+    }
+
+
+    public void mediaOptionsToggle()
+    {
+        if (mediaOptions.activeSelf == false)
+        {
+            mediaOptions.SetActive(true);
+        }
+        else if (mediaOptions.activeSelf == true)
+        {
+            mediaOptions.SetActive(false);
         }
 
     }
@@ -787,9 +873,7 @@ public class authControler : MonoBehaviour
             fileName = GameObject.FindGameObjectWithTag("US4TXT").GetComponent<Text>().text;
         }
         //once video is selected change screen and display the video
-        currentScreen.SetActive(false);
-        currentScreen = videoPlayerMenu;
-        currentScreen.SetActive(true);
+        goToMediaScreen();
 
         testvideoDownload(uid, fileName);
         
@@ -922,14 +1006,14 @@ public class authControler : MonoBehaviour
     /// </summary>
     private void setdefaultprefVariables()
     {
-        tempnickname = "default";
-        tempUsername = "default";
-        tempemail = "default";
-        tempDOB = "default";
-        temppronoun = "default";
-        tempfavColour = "default";
-        tempIntrests = "default";
-        preferedAvatar = "Rhiana";
+        tempnickname = "Nickname: Default";
+        tempUsername = "Username: Default";
+        tempemail = "Email: Default";
+        tempDOB = "DOB: Default";
+        temppronoun = "Pronoun: Default";
+        tempfavColour = "Favourite colour: Default";
+        tempIntrests = "Intrests: Default";
+        preferedAvatar = "Prefered avatar: Rhiana";
         auslan = false;
     }
 
@@ -983,19 +1067,17 @@ public class authControler : MonoBehaviour
         StreamWriter writer;
         writer = new StreamWriter(prefs);
         writer.WriteLine(
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Default \n" +
-            "Rhiana \n" +
-            "False"
+            "Nickname: Default \n" +
+            "Username: Default \n" +
+            "Email: Default \n" +
+            "DOB: Default \n" +
+            "Pronoun: Default \n" +
+            "Favourite colour: Default \n" +
+            "Intrests: Default \n" +
+            "Prefered avatar: Rhiana \n" +
+            "Auslan mode: False"
             );
         writer.Close();
-
-
     }
 
     /// <summary>
@@ -1089,7 +1171,7 @@ public class authControler : MonoBehaviour
     public void getFiles(string filename, StorageReference Location, bool sendingBasePrefs = true)
     {
 
-        Location.GetFileAsync(filename).ContinueWithOnMainThread((task) =>
+        Location.GetFileAsync( filename).ContinueWithOnMainThread((task) =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
@@ -1133,19 +1215,42 @@ public class authControler : MonoBehaviour
 
                 }
              
-                
-
-                /*
-                Debug.Log(nickname.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(Username.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(email.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(DOB.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(pronoun.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(favColour.gameObject.GetComponent<Text>().text + " \n");
-                Debug.Log(Intrests.gameObject.GetComponent<Text>().text + " \n");
-                */
             }
         });
 
     }
+
+    public void playPause()
+    {
+        if (playButton.activeSelf == true)
+        {
+            videoPlayer.Pause();
+            playButton.SetActive(false);
+            pauseButton.SetActive(true);
+        }
+        else if (pauseButton.activeSelf == true)
+        {
+            videoPlayer.Play();
+            playButton.SetActive(true);
+            pauseButton.SetActive(false);
+        }
+    }
+
+    public void subtitleUIToggle()
+    {
+        if (subtitlesUI.activeSelf == true)
+        {
+            subtitlesUI.SetActive(false);
+        }
+        else if (subtitlesUI.activeSelf == false)
+        {
+            subtitlesUI.SetActive(false);
+        }
+    }
+
+    public void auslanUIToggle()
+    {
+
+    }
+
 }
