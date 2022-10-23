@@ -100,7 +100,7 @@ public class authControler : MonoBehaviour
     public GameObject subCheckBox;
 
     //Firebase.Auth.FirebaseAuth auth;
-
+    public bool video_loading = true;
 
     /// <summary>
     /// create initial storage refrences for future use and store in public variables
@@ -928,8 +928,8 @@ public class authControler : MonoBehaviour
         storage = FirebaseStorage.DefaultInstance;
         storageReference = FirebaseStorage.DefaultInstance.RootReference;
         StorageReference uploadref = storageReference.Child(userID + "/" + filename);
-
-        storageRef.GetFileAsync(filename).ContinueWith(task =>
+        video_loading = true;
+        uploadref.GetFileAsync(filename).ContinueWith(task =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
@@ -938,49 +938,68 @@ public class authControler : MonoBehaviour
             else if(task.IsCompleted)
             {
                 Debug.Log("Video recieved and able to be used");
+                video_loading = false;
             }
         });
-
-        playVideo(filename);//once video has been downloaded, play video for the user by displaying the video
+        StartCoroutine(waiter(filename));
+        
+        
     }
 
+    IEnumerator waiter(string filename)
+    {
+        while (video_loading == true)//this should work but it doesnt
+        {
+            yield return new WaitForSeconds(1);//need to wait for the video to be downloaded from firebase to the local repository
+            if(video_loading == false)//this does work, idk why the other one wouldnt???
+            {
+                break;//break my soul and release me from my torment please
+            }
+        }
+         
+        
+        //Wait for 4 seconds
+        
+        playVideo(filename);//once video has been downloaded, play video for the user by displaying the video
 
+    }
     public void playVideo(string filepath)
     {
+        Debug.Log("1");
         // Will attach a VideoPlayer to the main camera.
         videoPlayerScreen = GameObject.FindGameObjectWithTag("Video Player");
-
+        Debug.Log("2");
         // VideoPlayer automatically targets the camera backplane when it is added
         // to a camera object, no need to change videoPlayer.targetCamera.
         var videoPlayer = videoPlayerScreen.GetComponent<VideoPlayer>();
-
+        Debug.Log("3");
         //var rendertex = videoPlayerScreen.AddComponent<MeshRenderer>();
 
         // Play on awake defaults to true. Set it to false to avoid the url set
         // below to auto-start playback since we're in Start().
         videoPlayer.playOnAwake = false;
-
+        Debug.Log("4");
         // By default, VideoPlayers added to a camera will use the far plane.
         // Let's target the near plane instead.
         videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.RenderTexture;
         //videoPlayer.targetMaterialRenderer = rendertex;
-
+        Debug.Log("5");
         // This will cause our Scene to be visible through the video being played.
         videoPlayer.targetCameraAlpha = 0.5F;
-
+        Debug.Log("6");
         // Set the video to play. URL supports local absolute or relative paths.
         // Here, using absolute.
         videoPlayer.url = filepath;
-
+        Debug.Log("7");
         // Skip the first 100 frames.
         //videoPlayer.frame = 100;
-
+        Debug.Log("8");
         // Restart from beginning when done.
         videoPlayer.isLooping = false;
-
+        Debug.Log("9");
         // Each time we reach the end, we slow down the playback by a factor of 10.
         //videoPlayer.loopPointReached += EndReached;
-
+        Debug.Log("10");
         // Start playback. This means the VideoPlayer may have to prepare (reserve
         // resources, pre-load a few frames, etc.). To better control the delays
         // associated with this preparation one can use videoPlayer.Prepare() along with
@@ -1222,6 +1241,8 @@ public class authControler : MonoBehaviour
 
     public void playPause()
     {
+        videoPlayerScreen = GameObject.FindGameObjectWithTag("Video Player");
+        var videoPlayer = videoPlayerScreen.GetComponent<VideoPlayer>();
         if (playButton.activeSelf == true)
         {
             videoPlayer.Pause();
