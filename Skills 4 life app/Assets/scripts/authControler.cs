@@ -715,7 +715,7 @@ public class authControler : MonoBehaviour
         metadata.ContentType = "video/mp4";
         StreamWriter writer;
 
-        storageReference.GetFileAsync("file://UserVideos.txt").ContinueWith(task =>//for some fucking magical reason this gets all of the files in all directories.
+        storageReference.GetFileAsync("UserVideos.txt").ContinueWith(task =>//for some fucking magical reason this gets all of the files in all directories.
         //this is some fucking magic boys
         {
             if (task.IsCanceled || task.IsFaulted)
@@ -770,7 +770,7 @@ public class authControler : MonoBehaviour
     /// </summary>
     public void getNamesOfUserVideos()
     {
-        storageReference.GetFileAsync("file://UserVideos.txt").ContinueWith(task =>//for some  magical reason this gets all of the files in all directories.
+        storageReference.GetFileAsync("UserVideos.txt").ContinueWith(task =>//for some  magical reason this gets all of the files in all directories.
         //this is some fucking magic boys
         {
             if (task.IsCanceled || task.IsFaulted)
@@ -927,7 +927,7 @@ public class authControler : MonoBehaviour
         storageReference = FirebaseStorage.DefaultInstance.RootReference;
         StorageReference uploadref = storageReference.Child(userID + "/" + filename);
 
-        storageRef.GetFileAsync("file://"+filename).ContinueWith(task =>
+        storageRef.GetFileAsync(filename).ContinueWith(task =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
@@ -1169,7 +1169,7 @@ public class authControler : MonoBehaviour
     public void getFiles(string filename, StorageReference Location, bool sendingBasePrefs = true)
     {
 
-        Location.GetFileAsync("file://"+ filename).ContinueWithOnMainThread((task) =>
+        Location.GetFileAsync( filename).ContinueWithOnMainThread((task) =>
         {
             if (task.IsCanceled || task.IsFaulted)
             {
