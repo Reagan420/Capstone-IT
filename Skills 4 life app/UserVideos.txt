@@ -6,6 +6,10 @@
       "bucket": "skills4life-a8de1.appspot.com"
     },
     {
+      "name": "3Jq12N8qgiNIKZLrL7OA9pTUAJY2/userPrefrences.txt",
+      "bucket": "skills4life-a8de1.appspot.com"
+    },
+    {
       "name": "3cz0KxgLOHhjWWhHWfm3eTPLEos2/default video.mp4",
       "bucket": "skills4life-a8de1.appspot.com"
     },
@@ -183,6 +187,10 @@
     },
     {
       "name": "s3M99cNguaasDpovKGaMvlV2hgE2/UserVideos.txt",
+      "bucket": "skills4life-a8de1.appspot.com"
+    },
+    {
+      "name": "tg4DtOp7pGS3u9NHsGQTSUtuy752/userPrefrences.txt",
       "bucket": "skills4life-a8de1.appspot.com"
     },
     {

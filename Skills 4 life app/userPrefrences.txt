@@ -1,8 +1,9 @@
-admin
-admin1
-admin1@admin1.admin1
-Default 
-Default 
-Default 
-Tim
-False
+Nickname: 
+Username: 
+Email: 
+DOB: 
+Pronoun:  
+Favourite colour: 
+Intrests:  
+Prefered avatar:  
+Auslan mode: False

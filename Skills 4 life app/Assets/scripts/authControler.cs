@@ -351,6 +351,7 @@ public class authControler : MonoBehaviour
         string path = prefs;//all videos users own
 
         File.WriteAllText(path, "");
+        Debug.Log("Making prefrences");
         makeDefaultPrefrences();
         //StorageReference uploadref = storageRef.Child(currUserID + "/" + prefs);
         // Upload the file to the path "images/rivers.jpg"
@@ -1003,8 +1004,11 @@ public class authControler : MonoBehaviour
 
     public void makeDefaultPrefrences()
     {
+        Debug.Log("1");
         setdefaultprefVariables();//set all prefrences to "default" to indicate that they are dummy variables
+        Debug.Log("2");
         makedefaultprefrencesFile();//once the prefrences have been generated, make them into a text file
+        Debug.Log("3");
         StorageReference uploadref = storageRef.Child(currUserID + "/" + prefs);//get the location this file needs to be sent to
         Debug.Log("uploaded prefrences");
     }
@@ -1014,14 +1018,14 @@ public class authControler : MonoBehaviour
     /// </summary>
     private void setdefaultprefVariables()
     {
-        tempnickname = "Nickname: Default";
-        tempUsername = "Username: Default";
-        tempemail = "Email: Default";
-        tempDOB = "DOB: Default";
-        temppronoun = "Pronoun: Default";
-        tempfavColour = "Favourite colour: Default";
-        tempIntrests = "Intrests: Default";
-        preferedAvatar = "Prefered avatar: Rhiana";
+        tempnickname = "Nickname: " ;
+        tempUsername = "Username: ";
+        tempemail = "Email: ";
+        tempDOB = "DOB: ";
+        temppronoun = "Pronoun: ";
+        tempfavColour = "Favourite colour: ";
+        tempIntrests = "Intrests: ";
+        preferedAvatar = "Prefered avatar: ";
         auslan = false;
     }
 
@@ -1075,14 +1079,14 @@ public class authControler : MonoBehaviour
         StreamWriter writer;
         writer = new StreamWriter(prefs);
         writer.WriteLine(
-            "Nickname: Default \n" +
-            "Username: Default \n" +
-            "Email: Default \n" +
-            "DOB: Default \n" +
-            "Pronoun: Default \n" +
-            "Favourite colour: Default \n" +
-            "Intrests: Default \n" +
-            "Prefered avatar: Rhiana \n" +
+            "Nickname: "  + "\n" +
+            "Username: " + "\n" +
+            "Email: " +  "\n" +
+            "DOB: \n" +
+            "Pronoun:  \n" +
+            "Favourite colour: \n" +
+            "Intrests:  \n" +
+            "Prefered avatar:  \n" +
             "Auslan mode: False"
             );
         writer.Close();
